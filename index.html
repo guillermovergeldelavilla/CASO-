@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muerte en la Ermita — Expediente Candelaria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Cormorant+SC:wght@600;700&family=Vollkorn:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#f2ede0; --ink-dim:#c8bfa9; --night:#141b17; --night-2:#1c2620; --night-3:#233129;
+  --wall:#e9e2cf; --gold:#c99a4c; --gold-soft:#8a6b34; --terracotta:#a8492f;
+  --azulejo:#2f6472; --azulejo-soft:#274e58; --line:rgba(201,154,76,0.25);
+  --shadow:0 18px 40px rgba(0,0,0,0.45);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:radial-gradient(ellipse at 20% -10%, rgba(47,100,114,0.25), transparent 55%),
+    radial-gradient(ellipse at 90% 10%, rgba(168,73,47,0.12), transparent 45%), var(--night);
+  color:var(--ink); font-family:'Vollkorn', Georgia, serif; min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold-soft); color:#fff;}
+h1,h2,h3,.display{font-family:'Cormorant SC','Cormorant Garamond', serif; letter-spacing:0.03em;}
+.mono{font-family:'JetBrains Mono', monospace;}
+button{font-family:inherit; cursor:pointer;}
+a{color:var(--gold);}
+.tilebar{height:8px; background:repeating-linear-gradient(90deg, var(--azulejo) 0 10px, var(--gold) 10px 12px, var(--night) 12px 22px); opacity:0.55;}
+
+/* ---------- Cover ---------- */
+#cover{min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:40px 20px; position:relative; overflow:hidden;}
+#cover .bgimg{position:absolute; inset:0; background-size:cover; background-position:center; opacity:0.35; filter:saturate(0.7);}
+#cover .bgimg.noimg{background:radial-gradient(circle at 50% 40%, rgba(47,100,114,0.25), transparent 60%);}
+#cover .frame{border:1px solid var(--line); padding:52px 40px; max-width:620px; background:linear-gradient(180deg, rgba(20,27,23,0.75), rgba(20,27,23,0.9)); box-shadow:var(--shadow); position:relative; z-index:2;}
+#cover .frame::before,#cover .frame::after{content:""; position:absolute; width:22px; height:22px; border:1px solid var(--gold); opacity:0.7;}
+#cover .frame::before{top:-1px;left:-1px;border-right:none;border-bottom:none;}
+#cover .frame::after{bottom:-1px;right:-1px;border-left:none;border-top:none;}
+#cover .eyebrow{color:var(--gold); letter-spacing:0.35em; font-size:12px; text-transform:uppercase; margin-bottom:18px;}
+#cover h1{font-size:52px; margin:0 0 6px; color:var(--wall); font-weight:700;}
+#cover .sub{font-style:italic; color:var(--ink-dim); font-size:19px; margin-bottom:28px;}
+#cover .place{color:var(--ink-dim); font-size:14px; margin-bottom:34px;}
+#cover .flame{width:3px; height:26px; margin:0 auto 30px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%; background:linear-gradient(180deg,#ffe6a8,var(--gold) 55%, var(--terracotta)); animation:flicker 2.6s infinite ease-in-out; box-shadow:0 0 18px 4px rgba(201,154,76,0.5);}
+@keyframes flicker{0%,100%{transform:scaleY(1) translateX(0); opacity:1;}30%{transform:scaleY(1.08) translateX(-1px); opacity:0.92;}55%{transform:scaleY(0.94) translateX(1px); opacity:1;}80%{transform:scaleY(1.03) translateX(-0.5px); opacity:0.95;}}
+#cover .startbtn{background:transparent; color:var(--gold); border:1px solid var(--gold); padding:14px 38px; font-size:14px; letter-spacing:0.2em; text-transform:uppercase; transition:all .25s ease;}
+#cover .startbtn:hover{background:var(--gold); color:var(--night);}
+@media (prefers-reduced-motion: reduce){#cover .flame{animation:none;}}
+
+/* ---------- Act progress header ---------- */
+#actbar{display:none; padding:14px 22px; border-bottom:1px solid var(--line); background:rgba(20,27,23,0.9); position:sticky; top:0; z-index:25; backdrop-filter:blur(6px);}
+#actbar.show{display:block;}
+.actsteps{display:flex; gap:6px; max-width:640px; margin:0 auto 8px; align-items:center;}
+.actstep{flex:1; height:3px; background:var(--line); border-radius:2px; position:relative;}
+.actstep.done{background:var(--gold);}
+.actstep.current{background:var(--azulejo);}
+.actlabel{text-align:center; font-size:12px; color:var(--gold); letter-spacing:0.16em; text-transform:uppercase; font-family:'JetBrains Mono';}
+
+/* ---------- Story acts (linear) ---------- */
+#story{display:none; max-width:640px; margin:0 auto; padding:50px 22px 120px;}
+#story.show{display:block;}
+.story-beat{display:none; animation:fadein .5s ease;}
+.story-beat.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(8px);}to{opacity:1; transform:translateY(0);}}
+.story-img{width:100%; aspect-ratio:16/9; background-size:contain; background-repeat:no-repeat; background-position:center; background-color:var(--night-3); margin-bottom:20px; border:1px solid var(--line); box-shadow:var(--shadow); position:relative;}
+.story-img.noimg{background:repeating-linear-gradient(135deg, var(--night-3) 0 18px, var(--night-2) 18px 36px);}
+.story-img.noimg::after{content:attr(data-missing); position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:14px; color:var(--ink-dim); font-family:'JetBrains Mono'; font-size:12px;}
+.story-beat .narrator{color:var(--ink-dim); font-style:italic; line-height:1.8; font-size:17px; margin-bottom:16px;}
+.story-beat .line{margin-bottom:16px; padding-left:16px; border-left:2px solid var(--line);}
+.story-beat .line b{display:block; color:var(--gold); font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;}
+.story-beat .line span{color:var(--wall); font-size:17px; line-height:1.7;}
+.story-nav{display:flex; justify-content:space-between; align-items:center; margin-top:34px;}
+.story-nav .btn{padding:12px 28px;}
+.story-progress{color:var(--ink-dim); font-size:12px; font-family:'JetBrains Mono';}
+
+/* ---------- App shell (hub) ---------- */
+#app{display:none; min-height:100vh; flex-direction:column;}
+header.bar{padding:16px 22px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); background:rgba(20,27,23,0.85); position:sticky; top:0; z-index:20; backdrop-filter:blur(6px);}
+header.bar .title{display:flex; flex-direction:column; line-height:1.1;}
+header.bar .title b{font-family:'Cormorant SC'; font-size:21px; color:var(--wall); letter-spacing:0.04em;}
+header.bar .title span{font-size:11px; color:var(--gold); letter-spacing:0.18em; text-transform:uppercase;}
+header.bar .clock{font-size:12px; color:var(--ink-dim); text-align:right;}
+nav.tabs{display:flex; gap:2px; overflow-x:auto; padding:0 14px; background:var(--night-2); border-bottom:1px solid var(--line);}
+nav.tabs button{background:transparent; border:none; color:var(--ink-dim); padding:13px 16px; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; border-bottom:2px solid transparent; font-family:'JetBrains Mono'; font-weight:500;}
+nav.tabs button.active{color:var(--gold); border-bottom-color:var(--gold);}
+nav.tabs button.locked{opacity:0.4;}
+nav.tabs button .count{display:inline-block; margin-left:6px; background:var(--azulejo-soft); color:var(--wall); font-size:10px; padding:1px 6px; border-radius:8px;}
+main{flex:1; padding:26px 20px 90px; max-width:980px; margin:0 auto; width:100%;}
+.panel{display:none;}
+.panel.active{display:block; animation:fadein .35s ease;}
+.section-title{display:flex; align-items:baseline; gap:10px; margin-bottom:10px; flex-wrap:wrap;}
+.section-title h2{margin:0; font-size:28px; color:var(--wall); font-weight:600;}
+.section-title .tag{font-size:11px; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase;}
+.lede{color:var(--ink-dim); font-style:italic; max-width:640px; margin-bottom:22px; font-size:16px; line-height:1.6;}
+
+/* ---------- Generic cards ---------- */
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px;}
+.card{background:linear-gradient(180deg, var(--night-3), var(--night-2)); border:1px solid var(--line); padding:16px; position:relative; transition:border-color .2s;}
+.card:hover{border-color:var(--gold-soft);}
+.card h3{margin:0 0 4px; font-size:20px; color:var(--wall);}
+.card .role{font-size:11px; color:var(--gold); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:10px;}
+.card p{color:var(--ink-dim); font-size:14px; line-height:1.5; margin:0 0 10px;}
+.portrait{width:100%; aspect-ratio:4/5; object-fit:cover; margin-bottom:12px; border:1px solid var(--line); display:block;}
+.portrait-wrap{position:relative; margin-bottom:12px;}
+.avatar{width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cormorant SC'; font-size:22px; color:#fff; border:1px solid var(--line);}
+.btn{display:inline-block; background:transparent; border:1px solid var(--gold-soft); color:var(--gold); padding:8px 14px; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; font-family:'JetBrains Mono';}
+.btn:hover{background:var(--gold-soft); color:#fff;}
+.btn.small{padding:5px 10px; font-size:11px;}
+.btn[disabled]{opacity:0.35; cursor:default;}
+.btn.danger{border-color:var(--terracotta); color:#e8967f;}
+.btn.danger:hover{background:var(--terracotta); color:#fff;}
+
+/* ---------- Suspects ---------- */
+.suspect-detail{border:1px solid var(--line); padding:22px; background:var(--night-2); margin-top:20px;}
+.suspect-detail .head{display:flex; gap:16px; align-items:center; margin-bottom:16px;}
+.suspect-detail .head img{width:64px; height:64px; object-fit:cover; border:1px solid var(--line);}
+.qa{border-top:1px dashed var(--line); padding:14px 0;}
+.qa .q{color:var(--wall); font-weight:600; cursor:pointer; display:flex; justify-content:space-between; gap:10px;}
+.qa .q:hover{color:var(--gold);}
+.qa .a{color:var(--ink-dim); margin-top:10px; line-height:1.6; display:none; font-size:15px;}
+.qa.open .a{display:block;}
+.qa .plus{color:var(--gold); font-family:'JetBrains Mono'; flex-shrink:0;}
+.evidence-unlock{margin-top:10px; padding:10px 12px; border-left:3px solid var(--gold); background:rgba(201,154,76,0.06); font-size:13px; color:var(--gold);}
+.locked-q{color:#6d7b73; font-size:13px; font-style:italic; padding:10px 0; border-top:1px dashed var(--line);}
+
+/* ---------- Rooms / image hotspots ---------- */
+.roomtabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+.roomtabs button{background:var(--night-2); border:1px solid var(--line); color:var(--ink-dim); padding:9px 16px; font-size:13px;}
+.roomtabs button.active{border-color:var(--gold); color:var(--gold);}
+.scene{border:1px solid var(--line); background:var(--night-2);}
+.scene-img{position:relative; width:100%; aspect-ratio:16/9; background-size:cover; background-position:center; overflow:hidden;}
+.scene-img.noimg{background:repeating-linear-gradient(135deg, var(--night-3) 0 18px, var(--night-2) 18px 36px); position:relative;}
+.scene-img.noimg::after{content:attr(data-missing); position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; color:var(--ink-dim); font-family:'JetBrains Mono'; font-size:12px;}
+.scene-caption{padding:16px 20px; color:var(--ink-dim); font-size:14px; border-bottom:1px solid var(--line);}
+.scene-img{cursor:crosshair;}
+.found-mark{position:absolute; width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; background:rgba(201,154,76,0.85); border:1px solid #fff; pointer-events:none; z-index:3;}
+.found-mark::after{content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--night); font-family:'JetBrains Mono';}
+.guide-mark{position:absolute; display:none; align-items:center; gap:6px; transform:translate(-50%,-50%); pointer-events:none; z-index:3;}
+.guide-mark .dot{width:22px; height:22px; border-radius:50%; border:2px dashed var(--gold); display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono'; font-size:11px; color:var(--gold); background:rgba(20,27,23,0.6); animation:dotpulse 2.2s infinite ease-in-out;}
+.guide-mark .lbl{background:rgba(20,27,23,0.85); border:1px solid var(--line); color:var(--ink-dim); font-size:10px; padding:2px 6px; white-space:nowrap; font-family:'JetBrains Mono';}
+@keyframes dotpulse{0%,100%{transform:scale(1); opacity:0.75;}50%{transform:scale(1.18); opacity:1;}}
+.scene-img.noimg .guide-mark{display:flex;}
+.ring{position:absolute; width:26px; height:26px; margin:-13px 0 0 -13px; border-radius:50%; border:2px solid var(--gold); animation:ringpop 0.7s ease-out forwards; pointer-events:none;}
+.ring.miss{border-color:#9c9284;}
+@keyframes ringpop{from{transform:scale(1); opacity:1;}to{transform:scale(3.2); opacity:0;}}
+.scene-text{padding:18px 20px; color:var(--wall); font-style:italic; min-height:26px; border-top:1px solid var(--line);}
+.scene-text .evidence-unlock{margin-top:12px; font-style:normal;}
+.hotspot-list{display:flex; flex-wrap:wrap; gap:6px; padding:0 20px 18px; font-family:'JetBrains Mono'; font-size:11px; color:var(--ink-dim);}
+.hotspot-list span{padding:3px 8px; border:1px solid var(--line);}
+.hotspot-list span.done{color:var(--gold); border-color:var(--gold-soft);}
+.scene-hint{padding:0 20px 14px;}
+.scene-hint button{font-size:11px; color:var(--ink-dim); border:1px dashed var(--line); background:transparent; padding:5px 10px;}
+
+/* ---------- Documents ---------- */
+.doc{border:1px solid var(--line); padding:18px; background:var(--night-2); margin-bottom:16px;}
+.doc h4{margin:0 0 10px; color:var(--gold); font-family:'JetBrains Mono'; font-size:13px; text-transform:uppercase; letter-spacing:0.08em;}
+.doc .locked-note{color:#6d7b73; font-style:italic; font-size:13px;}
+.chat{display:flex; flex-direction:column; gap:8px; max-height:340px; overflow-y:auto; padding-right:4px;}
+.bubble{max-width:75%; padding:8px 12px; border-radius:12px; font-size:14px; color:#1c1c1c;}
+.bubble.me{align-self:flex-end; background:#dcf3d6; border-bottom-right-radius:2px;}
+.bubble.them{align-self:flex-start; background:#eee; border-bottom-left-radius:2px;}
+.bubble.system{align-self:center; background:transparent; color:#9c9284; font-style:italic; font-size:12px;}
+.bubble .who{display:block; font-size:10px; color:#666; margin-bottom:2px; font-family:'JetBrains Mono';}
+
+/* ---------- Phone widget ---------- */
+.phone{max-width:280px; margin:14px 0; border:1px solid var(--line); background:#0f1512; border-radius:16px; overflow:hidden;}
+.phone-head{background:#1a231d; padding:8px 12px; font-family:'JetBrains Mono'; font-size:10px; color:var(--gold); text-align:center; letter-spacing:0.1em;}
+.phone-body{padding:12px; min-height:120px;}
+.phone-msg{background:#22302a; color:var(--ink); padding:8px 10px; border-radius:10px; font-size:13px; margin-bottom:8px; line-height:1.5; animation:fadein .4s ease;}
+.phone-tap{width:100%; background:var(--azulejo-soft); border:none; color:#fff; padding:10px; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; font-family:'JetBrains Mono';}
+.phone-tap[disabled]{opacity:0.3;}
+.phone-final{margin-top:10px; padding:10px; border-left:3px solid var(--gold); background:rgba(201,154,76,0.08); font-size:12.5px; color:var(--gold);}
+
+/* ---------- Lock puzzle ---------- */
+.lockbox{border:1px solid var(--gold-soft); background:rgba(201,154,76,0.05); padding:16px; margin-top:4px;}
+.lockbox input{background:var(--night); border:1px solid var(--line); color:var(--wall); font-family:'JetBrains Mono'; font-size:18px; letter-spacing:0.3em; padding:8px 12px; width:110px; text-align:center;}
+.lockbox .btn{margin-left:8px; vertical-align:middle;}
+.lock-msg{margin-top:8px; font-size:13px; color:var(--ink-dim); font-style:italic;}
+
+/* ---------- Title cards (chapter screens) ---------- */
+#titlecard{position:fixed; inset:0; background:var(--night); z-index:100; display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center; overflow:hidden;}
+#titlecard.show{display:flex;}
+#titlecard .tc-bg{position:absolute; inset:-5%; background-size:cover; background-position:center; opacity:0.28; animation:kenburns 9s ease-out forwards;}
+@keyframes kenburns{from{transform:scale(1);}to{transform:scale(1.12);}}
+#titlecard .tc-content{position:relative; z-index:2; animation:tcfade 1s ease;}
+@keyframes tcfade{from{opacity:0; transform:translateY(14px);}to{opacity:1; transform:translateY(0);}}
+#titlecard .tc-num{color:var(--gold); font-family:'JetBrains Mono'; letter-spacing:0.4em; font-size:13px; text-transform:uppercase; margin-bottom:14px;}
+#titlecard h2{font-size:46px; color:var(--wall); margin:0 0 10px;}
+#titlecard .tc-sub{color:var(--ink-dim); font-style:italic; font-size:16px; margin-bottom:6px;}
+#titlecard .tc-time{color:var(--gold-soft); font-family:'JetBrains Mono'; font-size:12px; margin-bottom:34px; letter-spacing:0.1em;}
+#titlecard .tc-btn{background:transparent; border:1px solid var(--gold); color:var(--gold); padding:13px 34px; font-size:13px; letter-spacing:0.18em; text-transform:uppercase;}
+#titlecard .tc-btn:hover{background:var(--gold); color:var(--night);}
+
+/* ---------- Cover loading ---------- */
+.load-wrap{margin-top:18px;}
+.load-bar{width:220px; height:2px; background:rgba(201,154,76,0.2); margin:0 auto; overflow:hidden;}
+.load-bar i{display:block; height:100%; width:0%; background:var(--gold); animation:loadfill 1.4s ease forwards;}
+@keyframes loadfill{to{width:100%;}}
+.load-label{font-family:'JetBrains Mono'; font-size:10px; color:var(--ink-dim); letter-spacing:0.2em; text-transform:uppercase; margin-top:10px;}
+#cover .startbtn{opacity:0; animation:tcfade 0.6s ease 1.4s forwards;}
+
+/* ---------- Blackout interlude ---------- */
+#interlude{display:none; min-height:100vh; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:30px; background:#0a0d0b;}
+#interlude.show{display:flex;}
+#interlude .glow{width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 24px 8px rgba(201,154,76,0.35); margin-bottom:26px;}
+#interlude p{max-width:480px; color:var(--ink-dim); font-style:italic; line-height:1.8; font-size:17px; margin-bottom:30px;}
+.dark-choices{display:flex; gap:16px; flex-wrap:wrap; justify-content:center;}
+.dark-choice{width:96px; height:96px; border-radius:50%; border:1px solid rgba(201,154,76,0.25); background:rgba(255,255,255,0.02); color:var(--ink-dim); font-size:12px;}
+.dark-choice:hover{border-color:var(--gold-soft);}
+.dark-choice.wrong{border-color:var(--terracotta); color:#e8967f;}
+.dark-choice.right{border-color:var(--gold); background:rgba(201,154,76,0.15); color:var(--gold);}
+
+/* ---------- Route puzzle (pasillo) ---------- */
+.route-diagram{display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; margin:10px 0;}
+.route-box{border:1px solid var(--line); padding:10px 12px; font-size:12px; color:var(--ink-dim); background:var(--night-3); text-align:center; min-width:70px;}
+.route-arrow{color:var(--gold-soft); font-size:16px;}
+.route-option{display:block; width:100%; text-align:left; border:1px solid var(--line); background:var(--night-3); color:var(--wall); padding:12px; margin-bottom:10px; font-size:13px;}
+.route-option:hover{border-color:var(--gold-soft);}
+
+/* ---------- Alibi logic grid ---------- */
+.alibi-row{display:grid; grid-template-columns:140px 1fr; gap:14px; align-items:center; margin-bottom:12px;}
+.alibi-row select{background:var(--night); border:1px solid var(--line); color:var(--wall); padding:8px; font-family:'Vollkorn'; font-size:14px; width:100%;}
+.alibi-row .clue{font-size:12.5px; color:var(--ink-dim); font-style:italic; grid-column:1/-1; margin:-6px 0 4px;}
+.alibi-msg{margin-top:12px; font-size:13px;}
+
+/* ---------- Shot penalty card ---------- */
+#shotcard-overlay{display:none; position:fixed; inset:0; background:rgba(10,13,11,0.88); z-index:300; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(2px);}
+#shotcard-overlay.show{display:flex;}
+.shotcard{background:var(--night-2); border:1px solid var(--terracotta); max-width:380px; width:100%; padding:34px 28px 28px; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.6); animation:tcfade 0.35s ease;}
+.shot-icon{font-size:46px; margin-bottom:8px;}
+.shotcard h3{margin:0 0 12px; color:#e8967f; font-size:24px;}
+.shotcard #shotcard-text{color:var(--ink-dim); font-size:14.5px; line-height:1.6; margin-bottom:14px;}
+.shot-count{font-family:'JetBrains Mono'; font-size:11px; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:20px;}
+
+/* ---------- Route map (node-tapping) ---------- */
+.map-diagram{position:relative; height:210px; margin:12px 0; border:1px solid var(--line); background:var(--night-3); border-radius:4px;}
+.map-node{position:absolute; transform:translate(-50%,-50%); padding:10px 16px; font-size:12.5px; border-radius:6px; border:1px solid var(--line); background:var(--night); color:var(--ink-dim); z-index:2;}
+.map-node-active{border-color:var(--gold); color:var(--gold); cursor:pointer;}
+.map-node-active:hover{background:rgba(201,154,76,0.12);}
+.map-node-current{border-color:var(--gold); background:var(--gold); color:var(--night); font-weight:700;}
+.map-node-used{border-color:var(--gold-soft); background:rgba(201,154,76,0.15); color:var(--wall);}
+.map-node-off{opacity:0.3; cursor:default;}
+
+/* ---------- Cipher puzzle ---------- */
+.cipher-text{font-family:'JetBrains Mono'; font-size:16px; letter-spacing:0.08em; color:var(--gold); background:var(--night); border:1px solid var(--line); padding:14px; margin:10px 0; word-spacing:6px;}
+.cipher-preview{font-family:'JetBrains Mono'; font-size:15px; letter-spacing:0.04em; color:var(--wall); background:var(--night-3); border:1px dashed var(--line); padding:12px; margin:8px 0; min-height:22px; word-spacing:6px;}
+.cipher-controls{display:flex; align-items:center; gap:10px; margin:10px 0;}
+.cipher-controls input[type=range]{flex:1; accent-color:var(--gold);}
+.cipher-shiftval{font-family:'JetBrains Mono'; color:var(--gold); min-width:26px; text-align:center;}
+
+/* ---------- Contradiction puzzle ---------- */
+.contra-card{display:block; width:100%; text-align:left; border:1px solid var(--line); background:var(--night-3); color:var(--ink-dim); padding:12px 14px; margin-bottom:8px; font-size:13.5px; line-height:1.5;}
+.contra-card b{color:var(--gold-soft); font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; display:block; margin-bottom:4px;}
+.contra-card.picked{border-color:var(--gold); background:rgba(201,154,76,0.08); color:var(--wall);}
+
+/* ---------- Riddle widget (Jaime) ---------- */
+.riddle-opt{display:inline-block; border:1px solid var(--gold-soft); background:transparent; color:var(--gold); padding:8px 14px; margin:4px 6px 4px 0; font-size:12.5px;}
+.riddle-opt:hover{background:var(--gold-soft); color:#fff;}
+
+/* ---------- Timeline ---------- */
+.tl{border-left:2px solid var(--line); margin-left:10px; padding-left:22px;}
+.tl-item{position:relative; padding-bottom:22px;}
+.tl-item::before{content:""; position:absolute; left:-28px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--gold);}
+.tl-time{font-family:'JetBrains Mono'; color:var(--gold); font-size:13px;}
+.tl-text{color:var(--ink-dim); margin-top:2px;}
+
+/* ---------- Board ---------- */
+#board-wrap{position:relative; border:1px solid var(--line); background:radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px) 0 0/14px 14px, var(--night-2); padding:20px; min-height:200px; overflow:hidden;}
+svg#lines{position:absolute; inset:0; width:100%; height:100%; pointer-events:none;}
+.pinboard{position:relative; z-index:2; width:100%;}
+.pin{width:156px; height:108px; box-sizing:border-box; overflow:hidden; background:var(--wall); color:#241d13; padding:12px 12px 10px; font-size:11.5px; box-shadow:0 8px 18px rgba(0,0,0,0.4); position:absolute; transform:rotate(var(--r,0deg)); line-height:1.35; border-top:14px solid transparent; cursor:pointer;}
+.pin::before{content:"●"; position:absolute; top:-11px; left:50%; transform:translateX(-50%); color:var(--terracotta); font-size:16px;}
+.pin.selected{outline:2px solid var(--gold);}
+.pin b{display:block; font-family:'JetBrains Mono'; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; color:var(--azulejo-soft);}
+.empty-note{color:var(--ink-dim); font-style:italic; padding:30px; text-align:center;}
+
+/* ---------- Accusation ---------- */
+.accuse-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+@media (max-width:760px){.accuse-grid{grid-template-columns:1fr;}}
+.pickbox{border:1px solid var(--line); padding:16px; background:var(--night-2);}
+.pickbox h4{margin-top:0; color:var(--wall);}
+.checkline{display:flex; align-items:center; gap:8px; padding:6px 0; font-size:14px; color:var(--ink-dim);}
+.checkline input{accent-color:var(--gold);}
+#resolution{margin-top:24px; border:1px solid var(--gold-soft); padding:24px; background:rgba(201,154,76,0.05); display:none;}
+#resolution.show{display:block;}
+#resolution h3{color:var(--gold); margin-top:0;}
+.locked-banner{border:1px dashed var(--terracotta); color:#e8967f; padding:16px; font-size:14px; margin-bottom:20px;}
+
+footer.hint{position:fixed; bottom:0; left:0; right:0; background:rgba(20,27,23,0.92); border-top:1px solid var(--line); padding:8px 16px; font-size:12px; color:var(--ink-dim); text-align:center; font-family:'JetBrains Mono'; z-index:30;}
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div id="cover">
+  <div class="bgimg" id="cover-bg"></div>
+  <div class="tilebar" style="position:absolute; top:0; left:0; right:0; z-index:2;"></div>
+  <div class="frame">
+    <div class="flame"></div>
+    <div class="eyebrow">Expediente reservado · Córdoba</div>
+    <h1>Muerte en<br>la Ermita</h1>
+    <div class="sub">Un caso para Guille &amp; Elena</div>
+    <div class="place mono">Restaurante Ermita de la Candelaria — noche del aniversario</div>
+    <button class="startbtn" onclick="startStory()">Abrir expediente</button>
+    <div class="load-wrap"><div class="load-bar"><i></i></div><div class="load-label">Expediente Nº 0417 · Córdoba</div></div>
+  </div>
+  <div class="tilebar" style="position:absolute; bottom:0; left:0; right:0; z-index:2;"></div>
+</div>
+
+<!-- ================= TITLE CARD ================= -->
+<div id="titlecard">
+  <div class="tc-bg" id="tc-bg"></div>
+  <div class="tc-content">
+    <div class="tc-num" id="tc-num"></div>
+    <h2 id="tc-title"></h2>
+    <div class="tc-sub" id="tc-sub"></div>
+    <div class="tc-time" id="tc-time"></div>
+    <button class="tc-btn" id="tc-btn">Continuar →</button>
+  </div>
+</div>
+
+<!-- ================= BLACKOUT INTERLUDE ================= -->
+<div id="interlude">
+  <div class="glow"></div>
+  <p id="interlude-text">Todo se queda a oscuras de golpe. Solo se oye la lluvia y, muy cerca, la respiración de todos conteniendo una broma que ya no hace tanta gracia. Pedrito mencionó antes dónde dejaba las velas... si alguien le prestó atención. Tanteáis la pared.</p>
+  <div class="dark-choices" id="dark-choices"></div>
+</div>
+
+<!-- ================= SHOT PENALTY CARD ================= -->
+<div id="shotcard-overlay">
+  <div class="shotcard">
+    <div class="shot-icon">🥃</div>
+    <h3>¡Chupito!</h3>
+    <div id="shotcard-text"></div>
+    <div id="shotcard-count" class="shot-count"></div>
+    <button class="btn danger" onclick="dismissShotCard()">Bebido, seguimos</button>
+  </div>
+</div>
+
+<!-- ================= ACT PROGRESS BAR ================= -->
+<div id="actbar">
+  <div class="actsteps" id="actsteps"></div>
+  <div class="actlabel" id="actlabel"></div>
+</div>
+
+<!-- ================= ACT 1 & 2: STORY ================= -->
+<div id="story"></div>
+
+<!-- ================= APP (HUB) ================= -->
+<div id="app">
+  <header class="bar">
+    <div class="title"><b>Expediente Candelaria</b><span>Investigación en curso</span></div>
+    <div class="clock mono">22:50 · la tormenta no cesa<br><span id="foot-count" style="color:var(--gold)">0</span>/13 pruebas</div>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <main>
+    <section class="panel" id="panel-personajes">
+      <div class="section-title"><h2>Personas presentes</h2><span class="tag">Interrogatorios</span></div>
+      <p class="lede">Hablad con cada uno cuantas veces queráis. Algunas preguntas solo aparecen si ya sabéis lo suficiente como para hacerlas.</p>
+      <div class="grid" id="suspect-list"></div>
+      <div id="suspect-detail"></div>
+    </section>
+
+    <section class="panel" id="panel-escenario">
+      <div class="section-title"><h2>La Ermita de la Candelaria</h2><span class="tag">Escenario</span></div>
+      <p class="lede">Pulsa sobre los puntos que brillan en la imagen. Cuando encuentres algo, un círculo lo marcará y quedará anotado en el expediente.</p>
+      <div class="roomtabs" id="room-tabs"></div>
+      <div class="scene" id="room-scene"></div>
+    </section>
+
+    <section class="panel" id="panel-documentos">
+      <div class="section-title"><h2>Documentos del caso</h2><span class="tag">Archivo</span></div>
+      <div id="doc-list"></div>
+    </section>
+
+    <section class="panel" id="panel-pruebas">
+      <div class="section-title"><h2>Panel de conexiones</h2><span class="tag">Corcho de investigación</span></div>
+      <p class="lede">Cada prueba encontrada aparece aquí como una chincheta, repartida sin orden por el corcho. Pulsa dos para unirlas con un hilo. Hay <b style="color:var(--gold);">5 conexiones reales</b> escondidas entre todas las que podéis hacer — encontradlas todas para resolver el tablero.</p>
+      <div id="board-wrap"><svg id="lines"></svg><div class="pinboard" id="pinboard"></div></div>
+      <div style="margin-top:14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <span style="font-family:'JetBrains Mono'; font-size:12px; color:var(--ink-dim);">Conexiones reales encontradas: <b id="board-progress" style="color:var(--gold);">0</b>/5</span>
+        <button class="btn small" onclick="checkBoard()">Resolver tablero</button>
+      </div>
+      <div class="lock-msg" id="board-msg"></div>
+    </section>
+
+    <section class="panel" id="panel-cronologia">
+      <div class="section-title"><h2>Esa noche, minuto a minuto</h2><span class="tag">Cronología conocida</span></div>
+      <p class="lede">Esto es lo que el grupo puede reconstruir en común. Las lagunas son lo que tenéis que rellenar vosotros con las pruebas.</p>
+      <div class="tl" id="timeline"></div>
+      <div class="doc" style="margin-top:26px;">
+        <h4>🧩 Puzzle del minuto exacto</h4>
+        <p style="color:var(--ink-dim); font-size:14px; line-height:1.7;">Guille ha reunido varias notas sueltas de esta noche. No todas sirven para lo que queréis calcular — primero hay que descartar las que no pintan nada.</p>
+        <ul style="font-size:13px; color:var(--ink-dim); padding-left:18px; margin:0 0 12px; line-height:1.6;">
+          <li>La tormenta empezó, según el parte meteorológico, a las 20:15.</li>
+          <li>El móvil de Sofía se autobloquea a los 4 minutos sin usarse.</li>
+          <li>Sofía cerró la caja del restaurante a las 20:50, antes de que llegara nadie.</li>
+          <li>Según el router, la última señal activa de la pantalla del móvil fue a las 22:08.</li>
+          <li>Se anunció el hallazgo del cuerpo ante todo el grupo a las 22:45.</li>
+        </ul>
+        <p style="color:var(--ink-dim); font-size:14px; line-height:1.7;"><b style="color:var(--wall);">Con solo las notas que de verdad sirven: ¿cuántos minutos pasaron entre que el móvil se desbloqueó por última vez y que se anunció el hallazgo?</b></p>
+        <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+          <input type="number" id="minute-puzzle-input" placeholder="minutos" style="background:var(--night); border:1px solid var(--line); color:var(--wall); font-family:'JetBrains Mono'; padding:8px 10px; width:100px;">
+          <button class="btn small" onclick="checkMinutePuzzle()">Comprobar</button>
+        </div>
+        <div class="lock-msg" id="minute-puzzle-msg"></div>
+      </div>
+      <div class="doc" style="margin-top:16px;">
+        <h4>🧩 Encuentra la contradicción</h4>
+        <p style="color:var(--ink-dim); font-size:14px; line-height:1.7;">De estas cinco frases sueltas de esta noche, dos no pueden ser ciertas a la vez. Tocad exactamente esas dos.</p>
+        <div id="contra-cards"></div>
+        <button class="btn small" style="margin-top:6px;" onclick="checkContradiction()">Comprobar pareja</button>
+        <div class="lock-msg" id="contra-msg"></div>
+      </div>
+      <div class="doc" style="margin-top:16px;">
+        <h4>🧩 Reconstruid el orden</h4>
+        <p style="color:var(--ink-dim); font-size:14px; line-height:1.7;">Estos cinco momentos de esa noche están desordenados. Usad las flechas para colocarlos en el orden real en que ocurrieron.</p>
+        <div id="order-cards"></div>
+        <button class="btn small" style="margin-top:6px;" onclick="checkOrder()">Comprobar orden</button>
+        <div class="lock-msg" id="order-msg"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-acusacion">
+      <div class="section-title"><h2>La acusación</h2><span class="tag">Cierre del caso</span></div>
+      <div id="accuse-lock-banner"></div>
+      <div id="accuse-body">
+        <p class="lede">Elegid a quién acusáis y qué pruebas sostienen la acusación. Este caso se resuelve una sola vez.</p>
+        <div class="accuse-grid">
+          <div class="pickbox"><h4>¿Quién es responsable?</h4><div id="accuse-people"></div></div>
+          <div class="pickbox"><h4>¿Con qué pruebas lo sostenéis?</h4><div id="accuse-evidence"></div></div>
+        </div>
+        <div style="margin-top:20px;"><button class="btn danger" onclick="resolveCase()">Presentar acusación final</button></div>
+        <div id="resolution"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="hint">Expediente Candelaria — usad el menú superior para moverse entre interrogatorios, escenario, documentos y panel.</footer>
+</div>
+
+<script>
+/* ============================================================ IMAGE HELPER */
+function setImgOrFallback(el, path, isBg, onResult){
+  const img = new Image();
+  img.onload = ()=>{ if(isBg){ el.style.backgroundImage = `url('${path}')`; el.classList.remove('noimg'); el.removeAttribute('data-missing'); } else { el.src = path; el.style.display=''; } if(onResult) onResult(true); };
+  img.onerror = ()=>{ if(isBg){ el.classList.add('noimg'); el.setAttribute('data-missing', 'Coloca aquí '+path); } else { el.style.display='none'; if(el.nextElementSibling) el.nextElementSibling.style.display='flex'; } if(onResult) onResult(false); };
+  img.src = path;
+}
+function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+/* ============================================================ STORY DATA (ACT 1 + ACT 2) */
+const STORY = [
+{img:"images/story-llegada.jpg", narrator:"Córdoba, finales de junio. La lluvia empieza a caer sobre la sierra justo cuando Guille y Elena aparcan frente a la Ermita de la Candelaria. Cinco años del restaurante de Sofía — la excusa perfecta para reunir a todo el grupo un jueves cualquiera."},
+{img:"images/story-sofia-recibe.jpg", narrator:"Sofía os recibe en la puerta con un abrazo a cada uno y una sonrisa que no le cabe en la cara.", lines:[
+  {who:"Sofía", text:"«¡Cinco años ya! No me lo puedo creer. Venid, venid, que hoy cocino yo personalmente, nada de dejarlo en manos de mis pinches.»"}
+]},
+{narrator:"Mira el reloj de pared dos veces en menos de un minuto, algo que no encaja con su euforia.", lines:[
+  {who:"Sofía", text:"«Ah, por cierto... esta noche tengo un anuncio que hacer. Después de cenar. Nada malo, tranquilos» — se ríe, pero la risa no le llega del todo a los ojos."}
+]},
+{img:"images/story-trio.jpg", narrator:"Edu llega primero, como siempre, con quince minutos de margen «por si hay que hacer networking». Detrás, Alfonso y Jaime discuten sobre algo relacionado con probabilidades de fútbol.", lines:[
+  {who:"Edu", text:"«¡Familia! Sofía, esto tiene que estar en todas las guías de la ciudad, te lo digo yo.»"},
+  {who:"Jaime", text:"«Alfonso, estadísticamente es imposible que el Córdoba suba dos años seguidos. Es que los números no mienten.»"},
+  {who:"Alfonso", text:"«Los números no, pero tú sí que exageras.»"}
+]},
+{narrator:"María Padilla llega tarde, disculpándose a medias, y nada más cruzar la puerta busca a Sofía con la mirada.", lines:[
+  {who:"María", text:"«Sofía, lo de este finde no puede volver a pasar, en serio. Ya hablamos de esto.»"},
+  {who:"Sofía", text:"«María, hoy no. Por favor, hoy no.»"}
+]},
+{narrator:"El cruce dura apenas diez segundos, pero varios lo notan. Después, ambas sonríen como si nada y se abrazan. Es su forma habitual de discutir — todos lo saben."},
+{img:"images/story-pedrito.jpg", narrator:"Pedrito entra empapado, con una caja de velas bajo el brazo.", lines:[
+  {who:"Pedrito", text:"«He traído velas, que con esta tormenta como se vaya la luz de la sierra no la recuperamos hasta mañana. Las voy a dejar junto a la puerta del despacho, que si pasa algo ya sabéis dónde están.»"},
+  {who:"Sofía", text:"«Qué previsor.»"}
+]},
+{img:"images/story-franga-andrino.jpg", narrator:"Franga llega la última, del brazo de Andrino. Sofía la saluda con cariño, pero en cuanto ve a Andrino le hace un gesto discreto para que se aparte un momento con ella.", lines:[
+  {who:"Lourdes", text:"(en voz baja, a Guille y Elena) «¿Notáis algo raro en el ambiente esta noche, o soy yo?»"}
+]},
+{narrator:"Sofía y Andrino hablan apartados apenas un minuto, con las cabezas muy juntas. Nadie más lo nota, salvo Lourdes, que los observa un segundo de más antes de volver a la conversación como si nada.", lines:[
+  {who:"Sofía", text:"(en voz baja, solo audible para Andrino) «Necesito que me digas la verdad. ¿Hay algo entre tú y Lourdes?»"},
+  {who:"Andrino", text:"«¿Qué? No, para nada, Sofía. ¿De dónde sacas eso?»"}
+]},
+{narrator:"No es solo eso. Edu revisa el móvil más de lo habitual y lo guarda de golpe cuando alguien se acerca. Alfonso, que normalmente no suelta prenda, se ha quedado mirando a Franga dos veces de una forma que no es la suya. Lourdes tiene razón: algo flota esta noche, y no parece venir de un único sitio."},
+{narrator:"Lourdes tiene ese don incómodo de leer habitaciones enteras en un vistazo. Ni Guille ni Elena saben qué responder todavía."},
+{img:"images/story-brindis.jpg", narrator:"La cena avanza entre risas, vino y las bromas de siempre. Por un momento, con todo el grupo reunido bajo el naranjo y las luces cálidas del patio, parece una noche como cualquier otra. Sofía se pone de pie con la copa en alto.", lines:[
+  {who:"Sofía", text:"«Cinco años. Gracias a todos por estar aquí. Y en un rato, cuando volvamos de los postres, os cuento la sorpresa — creo que os va a sorprender a más de uno.»"}
+]},
+{img:"images/story-sofia-despacho.jpg", narrator:"Nadie sospecha nada. Sigue lloviendo. Andrino se disculpa poco después, con el móvil ya en la mano.", lines:[
+  {who:"Andrino", text:"«Tengo que hacer una llamada de trabajo, dadme un minuto.»"}
+]},
+{narrator:"Son las 21:15. En los minutos siguientes la mesa se vacía y se llena varias veces — alguien va al baño, alguien sale a fumar bajo el alero, alguien atiende una llamada que dice urgente. Con la lluvia, el vino y el ruido de la sobremesa, nadie lleva la cuenta de quién falta ni durante cuánto tiempo."},
+{narrator:"El grupo sigue en el patio, riendo con las historias de Edu sobre su último cliente. Alfonso sigue fumando en la puerta, ya solo; alguien más entra y sale de la cocina más de una vez. Nadie repara en nada raro — hay demasiado ruido y demasiado vino para eso."},
+{img:"images/story-apagon.jpg", narrator:"A las 22:30, las luces parpadean y se apagan. Alguien grita en broma «¡fantasma!» y todos ríen, aunque el ambiente lleva ya un rato más tenso de lo que nadie se atreve a admitir en voz alta."},
+{narrator:"Andrino tampoco ha vuelto. Alguien lo comenta, sin darle importancia todavía — «estará todavía al teléfono, ya sabéis cómo es con el trabajo»."},
+{narrator:"Pedrito se levanta con total tranquilidad.", lines:[
+  {who:"Pedrito", text:"«Voy a por las velas al despacho, que las dejé ahí antes.»"}
+]},
+{narrator:"Pasan treinta segundos. Un minuto. Y entonces, un grito que corta toda la conversación de golpe."}
+];
+
+const STORY2 = [
+{img:"images/story-hallazgo.jpg", narrator:"Todos corren hacia el despacho. Guille llega entre los primeros y, con la poca luz de un móvil, comprueba lo que ya es evidente: Andrino no respira. No hay pulso."},
+{img:"images/story-elena-plano.jpg", narrator:"Elena, con la cabeza fría que le da su oficio, aparta a la gente y observa la habitación sin tocar nada — el escritorio medio volcado, un hueco vacío en la vitrina de trofeos.", lines:[
+  {who:"Elena", text:"«Nadie toque nada. Guille, mira si puedes decir algo sin moverlo. Yo voy a mirar cómo se llega hasta aquí.»"}
+]},
+{narrator:"Se llama a emergencias. La respuesta es la peor posible: la carretera de acceso a la sierra está cortada por el temporal. La ambulancia y la policía tardarán, como mínimo, una hora larga."},
+{img:"images/story-espera.jpg", narrator:"El grupo, conmocionado, se reúne en el comedor principal a esperar. Nadie quiere quedarse solo. Nadie, tampoco, se atreve a decir en voz alta lo que ya está pensando todo el mundo."},
+{narrator:"Guille y Elena se miran. Sin necesidad de decirlo, ambos saben que van a pasar la próxima hora investigando — antes de que llegue nadie más y antes de que la memoria de todos empiece a mezclarse con el shock.", lines:[
+  {who:"Guille", text:"«Vamos a necesitar hablar con todos. Y mirar bien la casa.»"},
+  {who:"Elena", text:"«Empiezo por el plano. Tú por el cuerpo.»"}
+]}
+];
+
+/* ============================================================ EVIDENCE / DOCS / ROOMS / CHARACTERS */
+const EVIDENCE = {
+  glitter:   {title:"Purpurina dorada en la manga", type:"real", desc:"En el perchero del patio, la chaqueta que Franga llevaba al llegar tiene motas doradas en el puño — el mismo dorado del trofeo del despacho.", tag:"Franga"},
+  callzero:  {title:"Llamada de 0 segundos", type:"real", desc:"El registro de su móvil muestra que la 'llamada' que Franga dijo estar haciendo a las 22:05 duró exactamente 0 segundos.", tag:"Franga"},
+  floorplan: {title:"Lectura del plano (Elena)", type:"real", desc:"Solo se puede llegar al despacho sin ser visto desde el patio por el pasillo de servicio — y alguien lo usó dos veces esa noche.", tag:"Franga"},
+  wifilog:   {title:"Registro wifi del móvil de Andrino", type:"real", desc:"El teléfono de Andrino se desbloqueó a las 22:12 — treinta y tres minutos antes de que alguien diera la voz de alarma.", tag:"Lourdes"},
+  simcard:   {title:"El contacto disfrazado", type:"real", desc:"En el móvil de Andrino hay un contacto guardado como 'Terapia — Dra. L.', con un prefijo que coincide con algo que alguien mencionó esta misma noche sin darle importancia.", tag:"Lourdes"},
+  photocrop: {title:"La foto sin recortar", type:"real", desc:"Una foto de grupo de hace unos meses, sin la versión 'oficial' recortada que todos han visto: en la original se ve una mano donde no debería haber ninguna.", tag:"Lourdes"},
+  lourdesobs:{title:"El comentario de María", type:"real", desc:"María comenta que Lourdes y Andrino 'se reían demasiado cómplices para ser solo amigos' — algo que nunca le había dado importancia hasta esta noche.", tag:"Lourdes"},
+  notasofia: {title:"La nota rota de Sofía", type:"real", desc:"Un recordatorio que Sofía escribió y rompió esa misma tarde: pensaba contarle a Franga esa misma noche algo sobre Andrino y Lourdes que llevaba tiempo callando.", tag:"Lourdes"},
+  cifranota: {title:"La servilleta cifrada", type:"real", desc:"Descifrada, la nota dice: «ANDRINO Y LOURDES SE VEN A ESCONDIDAS». Sofía lo sabía, y prefería anotarlo en clave antes que decirlo en voz alta.", tag:"Lourdes"},
+  letter:    {title:"Carta inacabada de Alfonso", type:"falsa", desc:"Una carta manuscrita de tono romántico de Alfonso a Sofía, fechada hace tres años. Vieja historia, ya cerrada.", tag:null},
+  loan:      {title:"Recibo de un préstamo a Edu", type:"falsa", desc:"3.000€ que Sofía prestó a Edu y que aún no le ha devuelto. Sin relación con esa noche.", tag:null},
+  voicenote: {title:"Nota de voz: María Padilla", type:"falsa", desc:"Una discusión grabada por casualidad entre María Padilla y Sofía sobre turnos de trabajo. Tensa, pero intrascendente.", tag:null},
+  andrinologo:{title:"'Nos veíamos por el logo'", type:"falsa", desc:"Sofía confirma que quedaba a solas con Andrino de vez en cuando — pero era para hablar del logo nuevo del restaurante.", tag:null},
+};
+
+const ROOMS = {
+  patio: {name:"Patio", img:"images/patio.jpg",
+    desc:"Naranjos, una pequeña fuente y el perchero de hierro forjado donde todos dejaron sus chaquetas antes de que empezara a llover.",
+    hotspots:[
+      {x:15,y:45,label:"Perchero de hierro", text:"La chaqueta de Franga cuelga distinta a como la lleva puesta ahora — dice que se la cambió 'porque estaba empapada'. En el puño de la original, algo brilla.", evidence:"glitter"},
+      {x:73,y:65,label:"Mesa del aperitivo", text:"Copas a medias, una tarta de aniversario sin tocar. Junto a los platos, la caja de velas que trajo Pedrito — abierta, y dentro quedan exactamente cinco."},
+      {x:62,y:62,label:"La fuente", text:"Solo agua y algunas hojas de naranjo caídas por el viento. Nada relevante, aunque el sonido del agua explica por qué nadie oyó nada desde aquí."},
+      {x:84,y:78,label:"Servilleta arrugada", text:"Alguien la escondió bajo un plato. Descifrada, se lee: «ANDRINO Y LOURDES SE VEN A ESCONDIDAS».", evidence:"cifranota", puzzle:"cipher"},
+    ]},
+  cocina: {name:"Cocina", img:"images/cocina.jpg",
+    desc:"El dominio de Sofía. Ollas todavía calientes, una pizarra con el menú de esta noche escrito con su letra.",
+    hotspots:[
+      {x:16,y:41,label:"Pizarra de turnos", text:"Sofía había anotado el menú de esta noche. Debajo, en una esquina: «cerramos caja el día 4 de cada mes, como siempre»."},
+      {x:86,y:55,label:"Puerta de servicio", text:"Da directamente al pasillo trasero que conecta con el despacho, sin pasar por el patio. Solo se puede llegar al pasillo pasando por aquí — no tiene otra entrada."},
+      {x:51,y:68,label:"Fogones", text:"Todo apagado y recogido, salvo una olla que alguien dejó a medio fuego — impropio de Sofía, tan meticulosa con su cocina."},
+    ]},
+  pasillo: {name:"Pasillo de servicio", img:"images/pasillo.jpg",
+    desc:"Estrecho, mal iluminado, conecta cocina y despacho evitando el patio. Elena se detiene a estudiarlo.",
+    hotspots:[
+      {x:17,y:20,label:"Plano en la pared", text:"«Solo hay un camino posible» — Elena señala el plano. «Y es este.»", evidence:"floorplan", puzzle:"route"},
+      {x:48,y:80,label:"Suelo mojado", text:"Dos rastros de pisadas húmedas distintas, superpuestos, en direcciones opuestas — alguien entró, y más tarde otra persona distinta hizo el mismo recorrido."},
+    ]},
+  despacho: {name:"Despacho", img:"images/despacho.jpg",
+    desc:"El lugar donde Pedrito encontró a Andrino. Una vitrina de trofeos, papeles del restaurante, el escritorio volcado en parte.",
+    hotspots:[
+      {x:78,y:30,label:"Vitrina de trofeos", text:"Falta el trofeo 'Mejor Rincón Gastronómico de Córdoba'. La placa junto al hueco dice: «Edición nº 21». Apareció junto al cuerpo — es, casi con seguridad, el arma."},
+      {x:12,y:65,label:"Cajón entreabierto", text:"Dentro hay una carta manuscrita sin terminar, de tono romántico, firmada por Alfonso. Fechada hace tres años.", evidence:"letter", lock:{code:"214", prompt:"Un candado de combinación de tres cifras. No hay ningún número escrito junto a él — pero recordáis dos datos sueltos de esta misma noche que, juntos, podrían ser la clave."}},
+      {x:64,y:52,label:"Recibo sobre la mesa", text:"Un recibo por 3.000€ prestados a Edu, sin marcar como devuelto.", evidence:"loan"},
+      {x:79,y:54,label:"El móvil de Andrino", text:"Está en modo avión, cosa rara — como si alguien no quisiera que sonara. El historial muestra que se desbloqueó a las 22:12.", evidence:"wifilog", embedPhone:true},
+      {x:66,y:89,label:"Papel arrugado bajo el escritorio", text:"Sofía debió de escribirlo poco antes de la cena y tirarlo, arrepentida quizá de lo directo que sonaba. Reconstruido, es la prueba más clara de que ya sabía lo de Andrino y Lourdes.", evidence:"notasofia", puzzle:"note"},
+    ]},
+};
+
+const DOCS = {
+  whatsapp: {title:"Chat de grupo — 'Cena Ermita 🍷'", render:`<div class="chat">
+    <div class="bubble system">— hace 3 semanas —</div>
+    <div class="bubble them"><span class="who">Sofía</span>¡Esta noche cerramos temprano para nosotros! 5 años de la Ermita 🎉</div>
+    <div class="bubble them"><span class="who">Edu</span>ahí estaré con traje, que esto hay que celebrarlo como se merece</div>
+    <div class="bubble them"><span class="who">Jaime</span>traigo el vino que sobró de mi cumple, nadie se queja</div>
+    <div class="bubble them"><span class="who">María Padilla</span>yo dependiendo de turno, os aviso</div>
+    <div class="bubble system">— hace 4 días —</div>
+    <div class="bubble them"><span class="who">Franga</span>ahí estaré, aunque hoy ando rara, luego os cuento</div>
+    <div class="bubble them"><span class="who">Pedrito</span>yo llevo velas por si la tormenta corta la luz, que la sierra es la sierra</div>
+    <div class="bubble them"><span class="who">Andrino</span>allí estaré, con Franga</div>
+    <div class="bubble system">— hoy, 18:40 —</div>
+    <div class="bubble them"><span class="who">Andrino</span>Franga llevas dos días muy callada, todo bien?</div>
+    <div class="bubble them"><span class="who">Franga</span>si, cansada. nos vemos ahi</div>
+  </div>`},
+  autopsia: {title:"Informe preliminar (Guille traduce)", render:`<p style="color:var(--ink-dim); line-height:1.7;">Golpe único en la zona parietal derecha con un objeto romo y anguloso, compatible con el trofeo hallado junto al cuerpo. No hay signos de defensa prolongada — la víctima no llegó a protegerse, lo que sugiere un golpe repentino, no una pelea larga. La hora estimada de la muerte, según temperatura corporal y rigidez, se sitúa entre las 21:40 y las 22:00.</p>`},
+  invitados: {title:"Ficha de invitados de esa noche", render:`<p style="color:var(--ink-dim); line-height:1.7;">Diez personas en el restaurante: Guille y Elena (protagonistas/investigadores), Andrino (víctima), Franga, Sofía, Alfonso, Edu, Jaime, María Padilla, Pedrito y Lourdes. Ningún empleado del restaurante quedaba de servicio — Sofía había cerrado el local solo para el grupo.</p>`},
+  foto: {title:"La foto de grupo sin recortar", compare:true, images:["images/foto-recortada.jpg","images/foto-original.jpg"], unlock:"photocrop", requires:"wifilog", targetX:10, targetY:55},
+};
+
+const CHARACTERS = [
+  {id:"franga", name:"Franga", role:"Marketing — pareja de Andrino", color:"#a8492f", img:"images/franga.jpg",
+   intro:"Devastada, casi no puede hablar. Evita mirar hacia el despacho.",
+   questions:[
+    {q:"¿Dónde estabas entre las 21:20 y las 22:00?", a:"«No sé... dando vueltas por el patio. Y llamé a mi hermana en algún momento, creo. No podía quedarme quieta. Todo esto es muy confuso.»"},
+    {q:"¿Notaste algo raro en Andrino esta noche?", a:"«Llevaba semanas raro. Esta noche más. Tenía un pálpito que no sabía explicar.»"},
+    {q:"¿Por qué te cambiaste de ropa?", a:"«Porque estaba empapada, ¿qué pregunta es esa?» — pero no os sostiene la mirada.", needsFound:["glitter"]},
+    {q:"¿Sospechabas algo de Andrino?", a:"«Llevaba tiempo dudando. Cosas pequeñas. No tenía pruebas de nada, solo... una sensación que no se me iba.»", needsFound:["callzero"]},
+    {q:"¿Le has contado esto a alguien más?", a:"«A nadie. Me daba vergüenza. Pensé que si esperaba, se me pasaría el mal cuerpo. No se me pasó.»"},
+   ]},
+  {id:"pedrito", name:"Pedrito", role:"Enfermero — encontró el cuerpo", color:"#2f6472", img:"images/pedrito.jpg",
+   intro:"Conmocionado pero sereno, colaborador hasta el extremo con la investigación.",
+   questions:[
+    {q:"Cuéntanos cómo encontraste el cuerpo.", a:"«Fui a por velas, se había ido la luz. Abrí la puerta y... ahí estaba.» Lo cuenta con la voz todavía temblorosa."},
+    {q:"¿Viste a alguien cerca del despacho antes?", a:"«Vi a Lourdes rondando por ahí un rato, pero no le di importancia — anda siempre pendiente de todos.»"},
+    {q:"¿Confías en alguien del grupo esta noche?", a:"«Sinceramente no sé qué pensar. Todos actúan raro, pero supongo que es normal después de esto.»"},
+   ]},
+  {id:"alfonso", name:"Alfonso", role:"Cirujano", color:"#5b5347", img:"images/alfonso.jpg",
+   intro:"Precisión hasta para dolerse. Responde con frases cortas, controlando cada palabra.",
+   questions:[
+    {q:"¿Qué relación tenías con Sofía?", a:"«Buena. Antigua. No hay más que decir.» No da detalles."},
+    {q:"¿Estuviste con Andrino toda la noche?", a:"«Estuve fumando en la puerta con él hasta que entró a hacer una llamada, sobre las nueve y cuarto. Después ya no lo vi.»"},
+    {q:"¿Sabías que Sofía iba a hacer un anuncio esta noche?", a:"«No tenía ni idea. Con ella nunca se sabía qué iba a salir por esa boca.»"},
+   ]},
+  {id:"edu", name:"Edu", role:"Consultor", color:"#3d4a44", img:"images/edu.jpg",
+   intro:"Optimiza hasta el pésame. Habla rápido, como si estuviera en una reunión.",
+   questions:[
+    {q:"¿Le debías dinero a Sofía?", a:"«3.000 euros, sí. Se los iba a devolver este mes, lo teníamos hablado. No es ningún secreto.»"},
+    {q:"¿Dónde estabas cuando se fue la luz?", a:"«En el patio, discutiendo con Jaime sobre estadísticas de fútbol, para variar.»"},
+    {q:"¿Notaste tensión entre alguien esta noche?", a:"«Entre María y Sofía, lo de siempre. Y Franga rarísima, pero eso ya se sabe.»"},
+   ]},
+  {id:"jaime", name:"Jaime", role:"Estadístico y matemático", color:"#274e58", img:"images/jaime.jpg",
+   intro:"Se conecta al wifi del restaurante 'por curiosidad' y termina encontrando algo que no buscaba.",
+   questions:[
+    {q:"¿Has notado algo raro en la red del local?", a:"«Sí, de hecho. El móvil de Andrino se desbloqueó a las 22:12. Lo sé porque quedó registrado en el router — soy así de raro, lo sé.»", unlock:"wifilog"},
+    {q:"¿Algo más en ese registro?", a:"«Vi un número raro conectándose varias veces al wifi del restaurante esta noche, sin ser de nadie del grupo... empezaba por 644, si mal no recuerdo.»", needsFound:["wifilog"]},
+    {q:"¿Confías en alguien del grupo esta noche?", a:"«En todos, la verdad. Aunque últimamente Lourdes pasa mucho tiempo pegada al móvil, más de lo normal en ella.»"},
+    {q:"🧩 Para desconectar un poco... ¿tienes algún acertijo de esos tuyos?", riddle:true},
+   ]},
+  {id:"maria", name:"María Padilla", role:"Marketing", color:"#6b4a4a", img:"images/maria.jpg",
+   intro:"Lengua afilada. Tuvo una discusión con Sofía esta misma noche, y no lo esconde.",
+   questions:[
+    {q:"Os oímos discutir con Sofía esta noche.", a:"«Por los turnos del finde, nada más. Sofía y yo discutíamos así una vez al mes, era nuestra dinámica.»", unlock:"voicenote"},
+    {q:"¿Notaste algo raro entre Lourdes y Andrino?", a:"«Llevo tiempo notando que se reían demasiado cómplices para ser solo amigos. Pero tampoco quería pensar mal.»", unlock:"lourdesobs", needsFound:["wifilog"]},
+    {q:"¿Qué opinas de Franga esta noche?", a:"«Rarísima. Pero Franga siempre está un poco al límite, no me sorprende tanto.»"},
+   ]},
+  {id:"lourdes", name:"Lourdes", role:"Psicóloga", color:"#4a6b52", img:"images/lourdes.jpg",
+   intro:"Ayuda a leer al grupo desde fuera, con la distancia justa — o eso parece.",
+   questions:[
+    {q:"¿Qué lees en el comportamiento de Franga?", a:"«Miedo real. Algo le pesa, pero no sabría deciros qué.»"},
+    {q:"¿Notaste algo raro en Andrino antes de morir?", a:"«Distraído, sí. Pensé que eran cosas del trabajo.»"},
+    {q:"¿Tú y Andrino os llevabais bien?", a:"«Sí, claro... éramos buenos amigos.» Lo dice en pasado, y algo en el tono no termina de convencer a Guille y Elena.", needsFound:["notasofia"]},
+   ]},
+  {id:"sofia", name:"Sofía", role:"Anfitriona — dueña del restaurante", color:"#8a6b34", img:"images/sofia.jpg",
+   intro:"Superada por lo ocurrido en su propio restaurante, la noche de su aniversario.",
+   questions:[
+    {q:"¿Qué relación tenías con Andrino?", a:"«Buena. A veces quedábamos a solas para hablar del logo nuevo del restaurante, nada más.»", unlock:"andrinologo"},
+    {q:"¿Notaste algo entre Andrino y alguien más?", a:"«No quería acusar a nadie sin estar segura... pero sí, algo no encajaba entre ellos.»"},
+    {q:"¿Qué ibas a anunciar esta noche?", a:"«Iba a anunciar que abro una segunda Ermita en Sevilla. Ahora mismo no sé si tiene sentido celebrar nada.»"},
+   ]},
+];
+
+const CALL_LOG = [
+  {name:"Mamá", time:"19:45", dur:"2:10"},
+  {name:"Franga ❤", time:"20:35", dur:"0:45"},
+  {name:"Grupo del trabajo", time:"20:41", dur:"0:00"},
+  {name:"Terapia — Dra. L.", time:"20:49", dur:"25:30"},
+  {name:"Número desconocido", time:"18:30 (ayer)", dur:"0:12"},
+  {name:"Terapia — Dra. L.", time:"14:20 (hace 3 días)", dur:"31:15"},
+  {name:"Taller mecánico", time:"09:14 (ayer)", dur:"0:32"},
+];
+const CALL_CORRECT = 3;
+const MSG_THREADS = [
+  {id:'t1', number:'+34 611 92 03 45', real:false, decoy:'«Hola, soy Marta, de la floristería — ¿confirmamos el pedido del sábado?» Número equivocado, sin relación con el caso.'},
+  {id:'t2', number:'+34 644 08 25 61', real:true},
+  {id:'t3', number:'+34 699 15 77 02', real:false, decoy:'«Recuerda que el lunes tienes revisión con el dentista a las 9:00.» Un recordatorio automático, sin relación con el caso.'},
+];
+const ANON_MSGS = [
+  "No puedo dejar de pensar en lo de anoche.",
+  "Sé que esto está mal, pero no consigo parar.",
+  "Franga no puede enterarse así, tenemos que hablar en persona.",
+  "Borra esto en cuanto lo leas, por favor.",
+];
+const NOTE_TEXT = ["Se lo digo","esta noche.","No puedo","callarlo más.","Lo de Andrino","y Lourdes,","Franga tiene","que saberlo."];
+const CIPHER_TEXT = "FSIWNST D QTZWIJX XJ AJS F JXHTSINIFX";
+const CIPHER_ANSWER = "ANDRINO Y LOURDES SE VEN A ESCONDIDAS";
+function caesarDecode(text, shift){
+  return text.replace(/[A-Z]/g, ch => String.fromCharCode(((ch.charCodeAt(0)-65-shift+260)%26)+65));
+}
+const CONTRA_CARDS = [
+  {who:"Franga · interrogatorio", text:"«No sé... dando vueltas por el patio. Y llamé a mi hermana en algún momento, creo.»"},
+  {who:"Expediente · registro de llamadas", text:"La llamada de Franga a las 22:05 duró exactamente 0 segundos — nunca llegó a conectarse."},
+  {who:"Pedrito · interrogatorio", text:"«Fui a por velas, se había ido la luz. Abrí la puerta y... ahí estaba.»"},
+  {who:"Alfonso · interrogatorio", text:"«Estuve fumando en la puerta con Andrino, hasta que él entró a hacer una llamada.»"},
+  {who:"Lourdes · interrogatorio", text:"«No he hablado con Andrino en toda la noche, ni un momento.»"},
+];
+const CONTRA_PAIR = [0,1];
+const ORDER_EVENTS = [
+  {id:'a', text:'Andrino se aleja hacia el despacho con la excusa de una llamada.'},
+  {id:'b', text:'Franga lo sigue poco después, sola.'},
+  {id:'c', text:'El móvil de Andrino se desbloquea.'},
+  {id:'d', text:'Se va la luz de toda la sierra.'},
+  {id:'e', text:'Pedrito encuentra el cuerpo ante todo el grupo.'},
+];
+const ORDER_CORRECT = ['a','b','c','d','e'];
+const ALIBI_OPTIONS = [
+  {id:'patio', label:'En el patio, con el grupo'},
+  {id:'puerta', label:'Fumando en la puerta'},
+  {id:'cocina', label:'En la cocina'},
+];
+const ALIBI_PEOPLE = [
+  {id:'edu', name:'Edu', correct:'patio'},
+  {id:'alfonso', name:'Alfonso', correct:'puerta'},
+  {id:'maria', name:'María Padilla', correct:'cocina'},
+];
+const ALIBI_CLUES = [
+  "Quien fumaba en la puerta no es quien discutió de fútbol con Jaime toda la noche.",
+  "Alfonso no pisó la cocina en ningún momento.",
+  "A quien ayudó con las copas la vieron salir de la cocina justo cuando se fue la luz.",
+  "Edu estuvo hablando de fútbol con Jaime durante toda la velada.",
+  "Quien ayudó con las copas no entiende nada de fútbol.",
+];
+
+const TIMELINE = [
+  {t:"Semanas antes", d:"Andrino pide consejo a Lourdes, como amiga psicóloga, sobre algo que no marcha bien en su relación con Franga. Las conversaciones se alargan más de lo que ninguno de los dos esperaba."},
+  {t:"Hace unos días", d:"Sofía los ve juntos, más cerca de lo normal, en la barra de la Ermita."},
+  {t:"20:30", d:"Llegada del grupo a la Ermita de la Candelaria. Andrino acompaña a Franga."},
+  {t:"20:40", d:"Mientras aún llegan invitados, Sofía aparta un momento a Andrino y le pregunta directamente si hay algo entre él y Lourdes. Él lo niega."},
+  {t:"21:00", d:"Aperitivo en el patio. Empieza a llover."},
+  {t:"21:15", d:"Andrino se disculpa, dice que tiene que hacer una llamada de trabajo, y se aleja hacia el despacho."},
+  {t:"21:20", d:"Franga, que lleva semanas dudando, lo sigue de cerca sin que él lo note."},
+  {t:"21:40–22:00", d:"Discusión en el despacho: Franga encuentra el móvil de Andrino desbloqueado, con conversaciones de Lourdes. Lo golpea con el trofeo, en un arrebato."},
+  {t:"22:05", d:"Franga vuelve al patio, pálida, dice estar terminando una llamada."},
+  {t:"22:10–22:13", d:"Lourdes, preocupada porque Andrino no contesta a sus mensajes, se acerca al despacho a comprobar: lo encuentra muerto, borra su conversación del móvil, y se marcha sin decir nada."},
+  {t:"22:30", d:"Se corta la luz por la tormenta."},
+  {t:"22:45", d:"Pedrito, buscando velas, encuentra el cuerpo ante todos."},
+  {t:"22:50", d:"Caos. La carretera está cortada; la policía tardará en llegar."},
+  {t:"23:00", d:"Guille y Elena empiezan a investigar."},
+];
+
+/* ============================================================ STATE */
+const state = { found:new Set(), interrogated:{}, connections:[], selectedPin:null, activeRoom:"patio", activeChar:null,
+  phone:{tab:'llamadas', msgIdx:0, callRevealed:false, simRevealed:false}, locksOpen:new Set(), solved:{} };
+const ACCUSE_MIN_EVIDENCE = 6;
+
+/* ============================================================ COVER + STORY FLOW */
+setImgOrFallback(document.getElementById('cover-bg'), 'images/cover.jpg', true);
+
+function showTitleCard(num, title, sub, time, bgImg, onContinue){
+  const tc = document.getElementById('titlecard');
+  document.getElementById('tc-num').textContent = num;
+  document.getElementById('tc-title').textContent = title;
+  document.getElementById('tc-sub').textContent = sub;
+  document.getElementById('tc-time').textContent = time;
+  const bg = document.getElementById('tc-bg');
+  bg.style.animation = 'none'; void bg.offsetWidth; bg.style.animation = '';
+  if(bgImg) setImgOrFallback(bg, bgImg, true); else { bg.style.backgroundImage=''; bg.className='tc-bg'; }
+  tc.classList.add('show');
+  document.getElementById('tc-btn').onclick = ()=>{ tc.classList.remove('show'); onContinue(); };
+}
+
+function startStory(){
+  document.getElementById('cover').style.display='none';
+  document.getElementById('actbar').classList.add('show');
+  showTitleCard('Acto I', 'La cena', 'Restaurante Ermita de la Candelaria', '20:30 · empieza a llover', 'images/story-llegada.jpg', ()=>{
+    buildStory('act1', STORY, 1, ()=>{
+      showTitleCard('Interludio', 'El apagón', 'La tormenta corta la luz de toda la sierra', '22:30', null, runBlackout);
+    });
+  });
+}
+function runBlackout(){
+  document.getElementById('interlude').classList.add('show');
+  const choices = document.getElementById('dark-choices');
+  const opts = [
+    {label:'Junto a la puerta', right:true},
+    {label:'Sobre la mesa auxiliar', right:false},
+    {label:'Detrás de la cortina', right:false},
+  ];
+  let solved = false;
+  function render(){
+    choices.innerHTML = opts.map((o,i)=>`<button class="dark-choice" onclick="blackoutTap(${i})">${o.label}</button>`).join('');
+  }
+  window.blackoutTap = function(i){
+    if(solved) return;
+    const btns = choices.querySelectorAll('.dark-choice');
+    if(opts[i].right){
+      solved = true;
+      btns[i].classList.add('right'); btns[i].textContent = '🕯️ ¡Las velas!';
+      document.getElementById('interlude-text').textContent = 'Las manos encuentran la caja. Alguien logra encender una — y entonces alguien más grita que hay que ir al despacho, que Andrino no contesta.';
+      setTimeout(()=>{
+        document.getElementById('interlude').classList.remove('show');
+        showTitleCard('Acto II', 'El hallazgo', 'Lo que encontráis al abrir la puerta', '22:45', 'images/story-hallazgo.jpg', ()=>{
+          buildStory('act2', STORY2, 2, ()=>{
+            showTitleCard('Acto III', 'La investigación', 'La policía tardará en llegar — tenéis tiempo, pero no todo el que quisierais', '23:00', null, openHub);
+          });
+        });
+      }, 1600);
+    } else {
+      btns[i].classList.add('wrong');
+      document.getElementById('interlude-text').textContent = 'Nada. Solo aire y un jarrón que casi tiras. Sigues tanteando.';
+      wrongAttempt('Ahí no hay velas. Si Pedrito dijo dónde las dejaba antes, en la cena, quizás os ayude recordarlo.');
+    }
+  };
+  render();
+}
+const ACT_NAMES = {1:"Acto I — La cena", 2:"Acto II — El apagón", 3:"Acto III — Investigación", 4:"Acto IV — Acusación"};
+function setActBar(n){
+  document.getElementById('actlabel').textContent = ACT_NAMES[n];
+  document.getElementById('actsteps').innerHTML = [1,2,3,4].map(i=>`<div class="actstep ${i<n?'done':i===n?'current':''}"></div>`).join('');
+}
+function buildStory(id, beats, actNum, onFinish){
+  setActBar(actNum);
+  const el = document.getElementById('story');
+  el.classList.add('show');
+  let i = 0;
+  function render(){
+    el.innerHTML = beats.map((b,idx)=>`
+      <div class="story-beat ${idx===i?'active':''}">
+        ${b.img ? `<div class="story-img" data-img="${b.img}"></div>` : ''}
+        <div class="narrator">${b.narrator}</div>
+        ${(b.lines||[]).map(l=>`<div class="line"><b>${l.who}</b><span>${l.text}</span></div>`).join('')}
+      </div>
+    `).join('') + `
+      <div class="story-nav">
+        <div class="story-progress">${i+1} / ${beats.length}</div>
+        <button class="btn" onclick="${'advance_'+id}()">${i===beats.length-1 ? 'Continuar →' : 'Seguir leyendo →'}</button>
+      </div>`;
+    el.querySelectorAll('.story-img').forEach(div=> setImgOrFallback(div, div.dataset.img, true));
+  }
+  window['advance_'+id] = function(){
+    if(i < beats.length-1){ i++; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+    else{ el.classList.remove('show'); onFinish(); }
+  };
+  render();
+}
+
+/* ============================================================ HUB */
+function openHub(){
+  document.getElementById('actbar').classList.remove('show');
+  document.getElementById('app').style.display='flex';
+  buildTabs(); buildSuspects(); buildRooms(); buildDocs(); buildTimeline(); buildAccusation();
+  switchTab('personajes');
+}
+const TABS = [["personajes","Personas"],["escenario","Escenario"],["documentos","Documentos"],["pruebas","Panel"],["cronologia","Cronología"],["acusacion","Acusación"]];
+function buildTabs(){
+  document.getElementById('tabs').innerHTML = TABS.map(([id,label])=>`<button data-tab="${id}" onclick="switchTab('${id}')">${label}</button>`).join('');
+}
+function switchTab(id){
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(id==='pruebas') renderBoard();
+  if(id==='acusacion') refreshAccusationLock();
+  if(id==='documentos') renderDocs();
+}
+
+/* ---------------- SUSPECTS ---------------- */
+function buildSuspects(){
+  document.getElementById('suspect-list').innerHTML = CHARACTERS.map(c=>`
+    <div class="card">
+      <div class="portrait-wrap">
+        <img class="portrait" alt="${c.name}" style="display:none;">
+        <div class="avatar" style="background:${c.color}; width:100%; aspect-ratio:4/5; border-radius:0; font-size:34px;">${initials(c.name)}</div>
+      </div>
+      <h3>${c.name}</h3>
+      <div class="role">${c.role}</div>
+      <p>${c.intro}</p>
+      <button class="btn small" onclick="openSuspect('${c.id}')">Interrogar</button>
+    </div>
+  `).join('');
+  document.querySelectorAll('#suspect-list .portrait').forEach((img,i)=> setImgOrFallback(img, CHARACTERS[i].img, false));
+}
+function openSuspect(id){
+  state.activeChar = id;
+  const c = CHARACTERS.find(x=>x.id===id);
+  if(!state.interrogated[id]) state.interrogated[id] = new Set(); // preguntas hechas alguna vez (nunca se borra)
+  if(!state.expanded) state.expanded = {};
+  if(!state.expanded[id]) state.expanded[id] = new Set(); // preguntas visualmente desplegadas ahora mismo
+  const det = document.getElementById('suspect-detail');
+  det.innerHTML = `<div class="suspect-detail">
+      <div class="head">
+        <img alt="${c.name}" style="display:none;">
+        <div class="avatar" style="background:${c.color};">${initials(c.name)}</div>
+        <div><h3 style="margin:0; color:var(--wall);">${c.name}</h3><div class="role">${c.role}</div></div>
+      </div>
+      <div id="qa-list"></div>
+    </div>`;
+  setImgOrFallback(det.querySelector('.head img'), c.img, false);
+  renderQA();
+  det.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function renderQA(){
+  const c = CHARACTERS.find(x=>x.id===state.activeChar);
+  const askedSet = state.interrogated[c.id];
+  const expSet = state.expanded[c.id];
+  let hasOpenPhone = false;
+  let hasOpenRiddle = false;
+  const html = c.questions.map((qq,i)=>{
+    if(qq.needsFound && !qq.needsFound.every(e=>state.found.has(e))) return `<div class="locked-q">🔒 Hay una pregunta pendiente aquí — hace falta saber algo más antes de poder hacerla.</div>`;
+    if(qq.needsAsked && !qq.needsAsked.every(idx=>askedSet.has(idx))) return `<div class="locked-q">🔒 Todavía no es el momento de preguntar esto — antes conviene tantear el terreno.</div>`;
+    const isOpen = expSet.has(i);
+    if(isOpen) askedSet.add(i);
+    if(qq.phone){
+      if(isOpen) hasOpenPhone = true;
+      return `<div class="qa ${isOpen?'open':''}">
+        <div class="q" onclick="toggleQA(${i})"><span>${qq.q}</span><span class="plus">${isOpen?'−':'+'}</span></div>
+        <div class="a">${isOpen ? '<p>Franga te pasa el móvil, incómoda, mirando hacia otro lado.</p><div id="phone-widget"></div>' : ''}</div>
+      </div>`;
+    }
+    if(qq.riddle){
+      if(isOpen) hasOpenRiddle = true;
+      return `<div class="qa ${isOpen?'open':''}">
+        <div class="q" onclick="toggleQA(${i})"><span>${qq.q}</span><span class="plus">${isOpen?'−':'+'}</span></div>
+        <div class="a">${isOpen ? '<div id="riddle-widget"></div>' : ''}</div>
+      </div>`;
+    }
+    let unlockHtml = '';
+    if(isOpen && qq.unlock){ state.found.add(qq.unlock); unlockHtml = `<div class="evidence-unlock">🕯️ Pista añadida al expediente: <b>${EVIDENCE[qq.unlock].title}</b></div>`; }
+    return `<div class="qa ${isOpen?'open':''}">
+      <div class="q" onclick="toggleQA(${i})"><span>${qq.q}</span><span class="plus">${isOpen?'−':'+'}</span></div>
+      <div class="a">${qq.a}${unlockHtml}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('qa-list').innerHTML = html;
+  if(hasOpenPhone) renderPhoneWidget();
+  if(hasOpenRiddle) renderRiddleWidget();
+  updateFooter();
+}
+function toggleQA(i){
+  const set = state.expanded[state.activeChar];
+  if(set.has(i)) set.delete(i); else set.add(i);
+  renderQA();
+}
+
+/* ---------------- PHONE WIDGET (Franga) ---------------- */
+function renderPhoneWidget(){
+  const el = document.getElementById('phone-widget');
+  if(!el) return;
+  const st = state.phone;
+  let body = '';
+  if(st.tab==='llamadas'){
+    body = CALL_LOG.map((call,i)=>{
+      const open = st.callOpen===i;
+      const showConfirm = open && !st.callRevealed;
+      return `<div class="phone-msg" style="cursor:pointer;" onclick="tapCall(${i})">${call.name} · ${call.time} · ${call.dur}
+        ${showConfirm ? `<div style="margin-top:6px;"><button class="phone-tap" onclick="confirmCall(${i}); event.stopPropagation();">¿Es esta la llamada que importa?</button></div>` : ''}
+      </div>`;
+    }).join('');
+    if(st.callRevealed) body += `<div class="phone-final">Esa llamada a "Terapia — Dra. L." termina a las 21:14 — justo antes de que Andrino se disculpara para "hacer una llamada de trabajo" y se alejara hacia el despacho.</div>`;
+    else body += `<div style="font-size:11px; color:var(--ink-dim); margin-top:6px;">Toca una llamada para examinarla y confirmad cuál creéis que es la relevante. Ojo: el mismo contacto aparece más de una vez.</div>`;
+  } else {
+    if(!st.msgThread){
+      body = `<div style="font-size:11px; color:var(--ink-dim); margin-bottom:8px;">Hay varias conversaciones con números sin guardar esa noche. Abrid la que creáis correcta.</div>` +
+        MSG_THREADS.map(t=>`<div class="phone-msg" style="cursor:pointer;" onclick="openThread('${t.id}')">${t.number}</div>`).join('');
+    } else {
+      const t = MSG_THREADS.find(x=>x.id===st.msgThread);
+      if(t.real){
+        if(st.msgIdx < ANON_MSGS.length){
+          body = ANON_MSGS.slice(0, st.msgIdx+1).map(m=>`<div class="phone-msg">${m}</div>`).join('') + `<button class="phone-tap" onclick="nextAnonMsg()">Ver siguiente mensaje</button>`;
+        } else {
+          body = ANON_MSGS.map(m=>`<div class="phone-msg">${m}</div>`).join('');
+          body += st.simRevealed ? `<div class="phone-final">Prefijo +34 644 — el mismo que mencionó Jaime. 🕯️ Anotado en el expediente.</div>` : `<button class="phone-tap" onclick="confirmThread('${t.id}')">Confirmar: este es el remitente</button>`;
+        }
+      } else {
+        body = `<div class="phone-msg">${t.decoy}</div><button class="phone-tap" onclick="confirmThread('${t.id}')">Confirmar: este es el remitente</button>`;
+      }
+      body += `<div style="margin-top:8px;"><button class="phone-tap" onclick="backToThreads()">← Volver a la lista</button></div>`;
+    }
+  }
+  el.innerHTML = `<div class="phone">
+    <div class="phone-head">📱 Móvil de Andrino</div>
+    <div style="display:flex; border-bottom:1px solid var(--line);">
+      <button class="phone-tap" style="background:${st.tab==='llamadas'?'var(--gold-soft)':'transparent'}; flex:1;" onclick="switchPhoneTab('llamadas')">Llamadas</button>
+      <button class="phone-tap" style="background:${st.tab==='mensajes'?'var(--gold-soft)':'transparent'}; flex:1;" onclick="switchPhoneTab('mensajes')">Mensajes</button>
+    </div>
+    <div class="phone-body">${body}</div>
+  </div>`;
+}
+function switchPhoneTab(t){ state.phone.tab=t; renderPhoneWidget(); }
+function tapCall(i){ state.phone.callOpen = (state.phone.callOpen===i ? null : i); renderPhoneWidget(); }
+function confirmCall(i){
+  if(state.phone.callRevealed) return;
+  if(i === CALL_CORRECT){
+    state.phone.callRevealed = true;
+  } else {
+    wrongAttempt('Esa no es la llamada que buscáis. El mismo contacto aparece más de una vez — fijaos en cuál encaja con la hora en que Andrino se ausentó.');
+  }
+  renderPhoneWidget();
+}
+function openThread(tid){ state.phone.msgThread = tid; state.phone.msgIdx = 0; renderPhoneWidget(); }
+function backToThreads(){ state.phone.msgThread = null; renderPhoneWidget(); }
+function confirmThread(tid){
+  const t = MSG_THREADS.find(x=>x.id===tid);
+  if(t.real){
+    state.phone.simRevealed = true;
+    state.found.add('simcard');
+    updateFooter();
+  } else {
+    wrongAttempt('Ese número no es el que buscáis. Jaime mencionó un prefijo muy concreto — comprobadlo con calma antes de confirmar.');
+  }
+  renderPhoneWidget();
+}
+function nextAnonMsg(){ state.phone.msgIdx++; renderPhoneWidget(); }
+
+/* ---------------- ROOMS (image hotspots) ---------------- */
+function buildRooms(){
+  document.getElementById('room-tabs').innerHTML = Object.keys(ROOMS).map(id=>`<button data-room="${id}" onclick="switchRoom('${id}')">${ROOMS[id].name}</button>`).join('');
+  switchRoom('patio');
+}
+function switchRoom(id){
+  state.activeRoom = id;
+  if(!state.solved[id]) state.solved[id] = new Set();
+  document.querySelectorAll('#room-tabs button').forEach(b=>b.classList.toggle('active', b.dataset.room===id));
+  const r = ROOMS[id];
+  const scene = document.getElementById('room-scene');
+  scene.innerHTML = `
+    <div class="scene-caption">${r.desc}</div>
+    <div class="scene-img" id="scene-img"></div>
+    <div class="hotspot-list" id="hotspot-list"></div>
+    <div class="scene-text" id="scene-text">Examina la imagen con calma — pulsa donde creas que puede haber algo. No todo será relevante.</div>`;
+  const imgEl = document.getElementById('scene-img');
+  setImgOrFallback(imgEl, r.img, true);
+  renderHotspotList(id);
+  r.hotspots.forEach((h,i)=>{
+    if(state.solved[id].has(i)){
+      const mark = document.createElement('div');
+      mark.className='found-mark'; mark.style.left=h.x+'%'; mark.style.top=h.y+'%';
+      imgEl.appendChild(mark);
+    } else {
+      const guide = document.createElement('div');
+      guide.className='guide-mark'; guide.style.left=h.x+'%'; guide.style.top=h.y+'%';
+      guide.innerHTML = `<span class="dot">${i+1}</span><span class="lbl">${h.label}</span>`;
+      imgEl.appendChild(guide);
+    }
+  });
+  imgEl.onclick = (ev)=>{
+    const rect = imgEl.getBoundingClientRect();
+    const px = ((ev.clientX-rect.left)/rect.width)*100;
+    const py = ((ev.clientY-rect.top)/rect.height)*100;
+    let hitIdx = -1, bestDist = 999;
+    r.hotspots.forEach((h,i)=>{
+      const dist = Math.hypot(h.x-px, h.y-py);
+      if(dist < 11 && dist < bestDist){ bestDist = dist; hitIdx = i; }
+    });
+    if(hitIdx>-1){
+      const h = r.hotspots[hitIdx];
+      const ring = document.createElement('div'); ring.className='ring'; ring.style.left=h.x+'%'; ring.style.top=h.y+'%';
+      imgEl.appendChild(ring); setTimeout(()=>ring.remove(),700);
+      const isLocked = (h.lock && !state.locksOpen.has(id+':'+hitIdx)) || (h.puzzle==='note' && !state.notaSolved) || (h.puzzle==='route' && !state.routeSolved) || (h.puzzle==='cipher' && !state.cipherSolved);
+      if(!state.solved[id].has(hitIdx) && !isLocked){
+        state.solved[id].add(hitIdx);
+        const mark=document.createElement('div'); mark.className='found-mark'; mark.style.left=h.x+'%'; mark.style.top=h.y+'%'; imgEl.appendChild(mark);
+      }
+      revealHotspot(id, hitIdx);
+    } else {
+      const ring = document.createElement('div'); ring.className='ring miss'; ring.style.left=px+'%'; ring.style.top=py+'%';
+      imgEl.appendChild(ring); setTimeout(()=>ring.remove(),700);
+      document.getElementById('scene-text').textContent = 'No encuentras nada especial ahí.';
+    }
+  };
+}
+function renderHotspotList(id){
+  const r = ROOMS[id];
+  document.getElementById('hotspot-list').innerHTML = r.hotspots.map((h,i)=>{
+    const found = state.solved[id].has(i);
+    return `<span class="${found?'done':''}">${found ? h.label : '¿ ... ?'}</span>`;
+  }).join('');
+}
+function revealHotspot(roomId, i){
+  const h = ROOMS[roomId].hotspots[i];
+  if(h.lock && !state.locksOpen.has(roomId+':'+i)){
+    document.getElementById('scene-text').innerHTML = `
+      <div class="lockbox">
+        <div style="color:var(--wall); font-style:normal;">${h.lock.prompt}</div>
+        <div style="margin-top:10px;">
+          <input type="text" maxlength="4" inputmode="numeric" id="lock-input-${roomId}-${i}" placeholder="000">
+          <button class="btn small" onclick="tryLock('${roomId}',${i})">Abrir</button>
+        </div>
+        <div class="lock-msg" id="lock-msg-${roomId}-${i}"></div>
+      </div>`;
+    return;
+  }
+  if(h.puzzle==='note' && !state.notaSolved){
+    document.getElementById('scene-text').innerHTML = `
+      <div style="color:var(--wall); font-style:normal; margin-bottom:10px;">🧩 Un papel roto en ocho pedazos. Toca una pieza junto al hueco para deslizarla hasta recomponer la nota.</div>
+      <div id="note-puzzle"></div>`;
+    renderNotePuzzle();
+    return;
+  }
+  if(h.puzzle==='route' && !state.routeSolved){
+    renderRoutePuzzle();
+    return;
+  }
+  if(h.puzzle==='cipher' && !state.cipherSolved){
+    document.getElementById('scene-text').innerHTML = `
+      <div style="color:var(--wall); font-style:normal; margin-bottom:6px;">🧩 Un mensaje cifrado por sustitución (tipo César): cada letra real se desplazó siempre el mismo número de posiciones hacia delante en el alfabeto. Coged papel y lápiz.</div>
+      <div class="story-img" id="napkin-img" style="max-width:340px; aspect-ratio:4/3; margin:10px 0;"></div>
+      <div class="cipher-text">${CIPHER_TEXT}</div>
+      <div style="font-size:13px; color:var(--ink-dim); line-height:1.7; margin:10px 0;">
+        Escribid el abecedario completo en el papel. La clave (cuántas posiciones hay que retroceder cada letra) es algo que ya habéis visto esta noche — no está aquí. Descifrad letra a letra a mano y, cuando obtengáis una frase con sentido, escribidla abajo tal cual la leáis.
+      </div>
+      <input type="text" id="cipher-answer" placeholder="Escribid aquí el mensaje descifrado" style="width:100%; max-width:420px; background:var(--night); border:1px solid var(--line); color:var(--wall); font-family:'JetBrains Mono'; padding:10px; letter-spacing:0.04em;">
+      <div style="margin-top:10px;"><button class="btn small" onclick="confirmCipher()">Comprobar</button></div>
+      <div class="lock-msg" id="cipher-msg"></div>`;
+    setImgOrFallback(document.getElementById('napkin-img'), 'images/servilleta.jpg', true);
+    return;
+  }
+  document.getElementById('scene-text').innerHTML = `<b style="color:var(--gold); font-style:normal;">${h.label}.</b> ${h.text}` + (h.evidence ? `<div class="evidence-unlock">🕯️ Pista añadida al expediente: <b>${EVIDENCE[h.evidence].title}</b></div>` : '') + (h.embedPhone ? `<div id="phone-widget" style="margin-top:14px;"></div>` : '');
+  if(h.evidence) state.found.add(h.evidence);
+  if(h.embedPhone){ if(!state.phone) state.phone={tab:'llamadas', callOpen:null, msgIdx:0}; renderPhoneWidget(); }
+  renderHotspotList(roomId);
+  updateFooter();
+}
+function renderRiddleWidget(){
+  const el = document.getElementById('riddle-widget');
+  if(!el) return;
+  if(state.riddleSolved){
+    el.innerHTML = `<p style="color:var(--ink-dim); font-style:italic;">«Ya la has resuelto. Jaime asiente, satisfecho.»</p>`;
+    return;
+  }
+  el.innerHTML = `<p style="color:var(--ink-dim); font-style:italic; margin-bottom:10px;">«Tengo tres cajas: una de manzanas, otra de peras, y otra mezclada. Las tres etiquetas están cambiadas de sitio — ninguna dice la verdad. Solo puedes sacar una fruta, de una caja, para averiguar el contenido real de las tres. ¿De qué caja la sacas?»</p>
+    <button class="riddle-opt" onclick="answerRiddle('manzanas')">De la caja "MANZANAS"</button>
+    <button class="riddle-opt" onclick="answerRiddle('peras')">De la caja "PERAS"</button>
+    <button class="riddle-opt" onclick="answerRiddle('mezcla')">De la caja "MEZCLA"</button>
+    <div class="lock-msg" id="riddle-msg"></div>`;
+}
+function answerRiddle(choice){
+  const msg = document.getElementById('riddle-msg');
+  if(choice==='mezcla'){
+    state.riddleSolved = true;
+    msg.innerHTML = '<span style="color:var(--gold);">Exacto. Como ninguna etiqueta es correcta, la caja "MEZCLA" no puede contener mezcla — así que es manzanas puras o peras puras. Esa fruta revela el resto por eliminación. Jaime sonríe: «Sabía que lo verías.»</span>';
+  } else {
+    wrongAttempt('Esa caja podría, en teoría, contener justo lo que dice su etiqueta falsa cambiada con otra — no os da certeza. Pensad cuál es la única etiqueta que no puede ser cierta de ninguna forma.');
+  }
+}
+function checkMinutePuzzle(){
+  const raw = document.getElementById('minute-puzzle-input').value;
+  const val = Number(raw);
+  const msg = document.getElementById('minute-puzzle-msg');
+  if(val === 33){
+    msg.innerHTML = '<span style="color:var(--gold);">Treinta y tres minutos. Anotadlo en el expediente — pero un hueco de tiempo, por sí solo, no es una prueba de nada. Hace falta cruzarlo con algo más antes de sacar conclusiones.</span>';
+    state.minuteSolved = true;
+  } else if(!raw.trim()){
+    msg.textContent = 'Escribid un número de minutos.';
+  } else {
+    wrongAttempt('Ese número no cuadra. Revisad qué notas son relevantes y cuáles no lo son — algunas están ahí solo para despistar.');
+  }
+}
+const MAP_NODES = {
+  patio:{x:10,y:75,label:'Patio'},
+  comedor:{x:36,y:75,label:'Comedor'},
+  terraza:{x:62,y:75,label:'Terraza'},
+  despacho:{x:90,y:75,label:'Despacho'},
+  baño:{x:10,y:20,label:'Baño'},
+  cocina:{x:36,y:20,label:'Cocina'},
+  pasillo:{x:90,y:20,label:'Pasillo'},
+};
+const MAP_EDGES = [['patio','comedor'],['patio','terraza'],['patio','baño'],['comedor','despacho'],['terraza','despacho'],['comedor','cocina'],['cocina','pasillo'],['pasillo','despacho']];
+const MAP_CLUES = [
+  "El pestillo de la puerta que va del comedor directo al despacho estuvo echado por dentro toda la noche — Alfonso, apoyado justo en ella para fumar, lo confirma.",
+  "La puerta de la terraza al despacho estaba atrancada por la humedad de la tormenta — Edu intentó salir a fumar por ahí y tuvo que dar la vuelta.",
+  "El baño no comunica con ningún otro pasillo interior; solo se vuelve al patio por donde se entró.",
+];
+function mapAdjacent(a,b){ return MAP_EDGES.some(e=>(e[0]===a&&e[1]===b)||(e[1]===a&&e[0]===b)); }
+function mapUsedEdge(path,a,b){
+  for(let i=0;i<path.length-1;i++){
+    if((path[i]===a&&path[i+1]===b)||(path[i]===b&&path[i+1]===a)) return true;
+  }
+  return false;
+}
+function renderRoutePuzzle(){
+  if(!state.mapPath) state.mapPath = ['patio'];
+  const path = state.mapPath;
+  const last = path[path.length-1];
+  const svgLines = MAP_EDGES.map(([a,b])=>{
+    const A=MAP_NODES[a], B=MAP_NODES[b];
+    return `<line x1="${A.x}%" y1="${A.y}%" x2="${B.x}%" y2="${B.y}%" stroke="var(--line)" stroke-width="2"/>`;
+  }).join('');
+  let pathLines='';
+  for(let i=0;i<path.length-1;i++){
+    const A=MAP_NODES[path[i]], B=MAP_NODES[path[i+1]];
+    pathLines += `<line x1="${A.x}%" y1="${A.y}%" x2="${B.x}%" y2="${B.y}%" stroke="var(--gold)" stroke-width="3"/>`;
+  }
+  const nodesHtml = Object.entries(MAP_NODES).map(([id,n])=>{
+    const inPath = path.includes(id);
+    const isLast = id===last;
+    const adj = !inPath && mapAdjacent(last,id);
+    let cls='map-node';
+    if(isLast) cls+=' map-node-current';
+    else if(inPath) cls+=' map-node-used';
+    else if(adj) cls+=' map-node-active';
+    else cls+=' map-node-off';
+    return `<button class="${cls}" style="left:${n.x}%; top:${n.y}%;" onclick="tapMapNode('${id}')" ${(!adj)?'disabled':''}>${n.label}</button>`;
+  }).join('');
+  document.getElementById('scene-text').innerHTML = `
+    <div style="color:var(--wall); font-style:normal; margin-bottom:8px;">🧩 Construid el camino tocando las salas por orden, empezando en el Patio. No todas las puertas que veis dibujadas se pueden usar esta noche — cruzad el plano con estos tres testimonios:</div>
+    <ul style="font-size:12.5px; color:var(--ink-dim); padding-left:18px; margin:0 0 12px;">
+      ${MAP_CLUES.map(c=>`<li>${c}</li>`).join('')}
+    </ul>
+    <div class="map-diagram" id="map-diagram">
+      <svg style="position:absolute; inset:0; width:100%; height:100%;">${svgLines}${pathLines}</svg>
+      ${nodesHtml}
+    </div>
+    <div style="font-size:12px; color:var(--ink-dim); margin:4px 0 10px;">Camino actual: <b style="color:var(--wall);">${path.map(id=>MAP_NODES[id].label).join(' → ')}</b></div>
+    <button class="btn small" onclick="resetMapPath()">Reiniciar</button>
+    <button class="btn small" onclick="confirmMapPath()" style="margin-left:8px;">Confirmar camino</button>
+    <div class="lock-msg" id="route-msg"></div>`;
+}
+function tapMapNode(id){
+  const path = state.mapPath;
+  const last = path[path.length-1];
+  if(path.includes(id) || !mapAdjacent(last,id)) return;
+  path.push(id);
+  renderRoutePuzzle();
+}
+function resetMapPath(){
+  state.mapPath = ['patio'];
+  renderRoutePuzzle();
+}
+function confirmMapPath(){
+  const path = state.mapPath;
+  if(mapUsedEdge(path,'comedor','despacho')){
+    wrongAttempt('Esa puerta estuvo con el pestillo echado toda la noche, según Alfonso. Nadie pudo cruzar por ahí. Reiniciad el camino.');
+    return;
+  }
+  if(mapUsedEdge(path,'terraza','despacho')){
+    wrongAttempt('Esa puerta estaba atrancada por la humedad — Edu tuvo que dar la vuelta al intentarlo. Reiniciad el camino.');
+    return;
+  }
+  if(last(path)==='baño'){
+    wrongAttempt('El baño no lleva a ningún otro sitio. Habéis vuelto sobre vuestros pasos para nada. Reiniciad el camino.');
+    return;
+  }
+  if(path[path.length-1] !== 'despacho'){
+    document.getElementById('route-msg').textContent = 'Todavía no habéis llegado al despacho.';
+    return;
+  }
+  if(path.join(',') === 'patio,comedor,cocina,pasillo,despacho'){
+    state.routeSolved = true;
+    const roomId='pasillo', hi=ROOMS.pasillo.hotspots.findIndex(h=>h.puzzle==='route');
+    if(!state.solved[roomId]) state.solved[roomId]=new Set();
+    state.solved[roomId].add(hi);
+    const imgEl=document.getElementById('scene-img');
+    if(imgEl){ const h=ROOMS[roomId].hotspots[hi]; const mark=document.createElement('div'); mark.className='found-mark'; mark.style.left=h.x+'%'; mark.style.top=h.y+'%'; imgEl.appendChild(mark); }
+    revealHotspot(roomId, hi);
+    return;
+  }
+  wrongAttempt('Ese camino no es el correcto. Reiniciad y probadlo de nuevo.');
+}
+function last(arr){ return arr[arr.length-1]; }
+function normalizeAnswer(s){
+  return s.toUpperCase().replace(/[^A-ZÑ]/g, ' ').replace(/\s+/g,' ').trim()
+    .replace(/Ñ/g,'N'); // por si alguien escribe con Ñ, el original no la usa
+}
+function confirmCipher(){
+  const raw = document.getElementById('cipher-answer').value;
+  const decoded = normalizeAnswer(raw);
+  const msg = document.getElementById('cipher-msg');
+  if(decoded === CIPHER_ANSWER){
+    state.cipherSolved = true;
+    const roomId='patio', hi=ROOMS.patio.hotspots.findIndex(h=>h.puzzle==='cipher');
+    if(!state.solved[roomId]) state.solved[roomId]=new Set();
+    state.solved[roomId].add(hi);
+    const imgEl=document.getElementById('scene-img');
+    if(imgEl){ const h=ROOMS[roomId].hotspots[hi]; const mark=document.createElement('div'); mark.className='found-mark'; mark.style.left=h.x+'%'; mark.style.top=h.y+'%'; imgEl.appendChild(mark); }
+    revealHotspot(roomId, hi);
+  } else if(!raw.trim()){
+    msg.textContent = 'Escribid el mensaje que hayáis descifrado a mano.';
+  } else {
+    wrongAttempt('El mensaje descifrado no es correcto. Revisad el desplazamiento letra a letra — la clave la visteis antes esta misma noche.');
+  }
+}
+function noteNeighbors(idx){
+  const r=Math.floor(idx/3), c=idx%3, arr=[];
+  if(r>0) arr.push(idx-3); if(r<2) arr.push(idx+3);
+  if(c>0) arr.push(idx-1); if(c<2) arr.push(idx+1);
+  return arr;
+}
+function initNoteBoard(){
+  let board=[1,2,3,4,5,6,7,8,0], blank=8;
+  for(let n=0;n<80;n++){
+    const nb = noteNeighbors(blank);
+    const pick = nb[Math.floor(Math.random()*nb.length)];
+    [board[blank],board[pick]]=[board[pick],board[blank]];
+    blank=pick;
+  }
+  state.noteBoard = board;
+}
+function renderNotePuzzle(){
+  if(!state.noteBoard) initNoteBoard();
+  const el = document.getElementById('note-puzzle');
+  if(!el) return;
+  el.innerHTML = `
+    <div class="story-img" id="nota-decorativa" style="max-width:320px; aspect-ratio:1/1; margin-bottom:14px;"></div>
+    <div style="font-size:12px; color:var(--ink-dim); margin-bottom:10px;">Está tan arrugada que no se lee — pero al tacto notáis que hay pliegues, como si alguien la hubiera doblado en piezas. Reconstruidla con las palabras:</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; max-width:380px;">
+      ${state.noteBoard.map((v,idx)=>{
+        if(v===0) return `<button onclick="tapNoteTile(${idx})" style="min-height:70px; background:transparent; border:1px dashed var(--line);"></button>`;
+        return `<button onclick="tapNoteTile(${idx})" style="min-height:70px; padding:6px; font-size:12.5px; line-height:1.35; background:var(--wall); color:#241d13; border:1px solid var(--gold-soft); cursor:pointer; text-align:left;">${NOTE_TEXT[v-1]}</button>`;
+      }).join('')}
+    </div>
+    <div style="margin-top:10px;">
+      <button class="btn small" onclick="initNoteBoard(); renderNotePuzzle();">🔀 Volver a mezclar</button>
+      <button class="btn small" onclick="checkNotePuzzle()" style="margin-left:8px;">Comprobar</button>
+    </div>
+    <div class="lock-msg" id="note-msg"></div>`;
+  setImgOrFallback(document.getElementById('nota-decorativa'), 'images/nota-rota.jpg', true);
+}
+function tapNoteTile(idx){
+  const blank = state.noteBoard.indexOf(0);
+  if(!noteNeighbors(blank).includes(idx)) return;
+  [state.noteBoard[blank], state.noteBoard[idx]] = [state.noteBoard[idx], state.noteBoard[blank]];
+  renderNotePuzzle();
+}
+function checkNotePuzzle(){
+  const solved = state.noteBoard.every((v,i)=> v === (i<8 ? i+1 : 0));
+  if(solved){
+    state.notaSolved = true;
+    const roomId='despacho', hi=ROOMS.despacho.hotspots.findIndex(h=>h.puzzle==='note');
+    if(!state.solved[roomId]) state.solved[roomId]=new Set();
+    state.solved[roomId].add(hi);
+    const imgEl=document.getElementById('scene-img');
+    if(imgEl){ const h=ROOMS[roomId].hotspots[hi]; const mark=document.createElement('div'); mark.className='found-mark'; mark.style.left=h.x+'%'; mark.style.top=h.y+'%'; imgEl.appendChild(mark); }
+    setTimeout(()=>revealHotspot(roomId, hi), 400);
+  } else {
+    wrongAttempt('Las piezas no forman la frase todavía. Seguid deslizando — la casilla vacía marca por dónde podéis mover.');
+  }
+}
+function tryLock(roomId, i){
+  const h = ROOMS[roomId].hotspots[i];
+  const val = document.getElementById(`lock-input-${roomId}-${i}`).value.trim();
+  if(val === h.lock.code){
+    state.locksOpen.add(roomId+':'+i);
+    state.solved[roomId].add(i);
+    const imgEl = document.getElementById('scene-img');
+    if(imgEl){ const mark=document.createElement('div'); mark.className='found-mark'; mark.style.left=h.x+'%'; mark.style.top=h.y+'%'; imgEl.appendChild(mark); }
+    revealHotspot(roomId, i);
+  } else {
+    if(val) wrongAttempt('Ese código no abre el candado. Puede que la respuesta esté repartida en otra parte del restaurante.');
+  }
+}
+
+/* ---------------- DOCUMENTS ---------------- */
+function buildDocs(){
+  renderDocs();
+}
+function renderDocs(){
+  document.getElementById('doc-list').innerHTML = Object.entries(DOCS).map(([id,d])=>{
+    if(d.requires && !state.found.has(d.requires)){
+      return `<div class="doc"><h4>${d.title}</h4><p class="locked-note">🔒 Clasificado. Todavía no tenéis el contexto necesario para que esto tenga sentido.</p></div>`;
+    }
+    if(d.compare){
+      return `<div class="doc"><h4>${d.title}</h4>
+        <div id="cmp-wrap-${id}" style="position:relative; aspect-ratio:4/3; overflow:hidden; border:1px solid var(--line); cursor:crosshair;">
+          <div class="story-img" id="cmp-base-${id}" style="position:absolute; inset:0; margin:0;"></div>
+          <div class="story-img" id="cmp-top-${id}" style="position:absolute; inset:0; margin:0; clip-path:inset(0 0 0 0);"></div>
+        </div>
+        <input type="range" min="0" max="100" value="0" id="cmp-slider-${id}" oninput="onCompareSlide('${id}', this.value)" style="width:100%; margin-top:10px; accent-color:var(--gold);">
+        <p style="font-size:12px; color:var(--ink-dim); margin-top:6px;" id="cmp-status-${id}">${state.found.has(d.unlock)?'Manipulación identificada ✓':'Deslizad para revelar la foto completa.'}</p>
+        <div class="lock-msg" id="cmp-msg-${id}"></div>
+      </div>`;
+    }
+    return `<div class="doc"><h4>${d.title}</h4>${d.render}
+      ${d.unlock ? `<button class="btn small" style="margin-top:12px;" onclick="unlockDoc('${id}')" id="docbtn-${id}">${state.found.has(d.unlock)?'Añadida ✓':'Añadir al expediente'}</button>` : ''}
+    </div>`;
+  }).join('');
+  Object.entries(DOCS).forEach(([id,d])=>{
+    if(d.compare && (!d.requires || state.found.has(d.requires))){
+      setImgOrFallback(document.getElementById(`cmp-base-${id}`), d.images[1], true);
+      setImgOrFallback(document.getElementById(`cmp-top-${id}`), d.images[0], true);
+      const wrap = document.getElementById(`cmp-wrap-${id}`);
+      if(wrap && !state.found.has(d.unlock)){
+        wrap.onclick = (ev)=>{
+          const slider = document.getElementById(`cmp-slider-${id}`);
+          const msg = document.getElementById(`cmp-msg-${id}`);
+          if(Number(slider.value) < 50){
+            msg.innerHTML = '<span style="color:#e8967f;">Deslizad primero para revelar la foto completa.</span>';
+            return;
+          }
+          const rect = wrap.getBoundingClientRect();
+          const px = ((ev.clientX-rect.left)/rect.width)*100;
+          const py = ((ev.clientY-rect.top)/rect.height)*100;
+          const dist = Math.hypot(px-d.targetX, py-d.targetY);
+          if(dist < 16){
+            state.found.add(d.unlock);
+            updateFooter();
+            renderDocs();
+          } else {
+            const hx = px < d.targetX ? 'un poco más a la derecha' : 'un poco más a la izquierda';
+            const hy = py < d.targetY ? 'y algo más abajo' : 'y algo más arriba';
+            msg.innerHTML = `<span style="color:#e8967f;">Ahí no hay nada raro. Probad ${hx}, ${hy}.</span>`;
+          }
+        };
+      }
+    }
+  });
+}
+function unlockDoc(id){ state.found.add(DOCS[id].unlock); renderDocs(); updateFooter(); }
+function onCompareSlide(id, val){
+  document.getElementById(`cmp-top-${id}`).style.clipPath = `inset(0 0 0 ${val}%)`;
+  const status = document.getElementById(`cmp-status-${id}`);
+  if(status && !state.found.has(DOCS[id].unlock)){
+    status.textContent = Number(val) >= 50 ? 'Tocad en la foto el punto exacto donde debería estar lo que falta.' : 'Deslizad para revelar la foto completa.';
+  }
+}
+
+/* ---------------- BOARD ---------------- */
+const CORRECT_LINKS = [['glitter','floorplan'],['callzero','wifilog'],['photocrop','cifranota'],['notasofia','lourdesobs'],['letter','loan']].map(p=>p.slice().sort());
+function pinHash(id){
+  let h=0; for(let i=0;i<id.length;i++) h=(h*31+id.charCodeAt(i))>>>0;
+  return h;
+}
+function renderBoard(){
+  const board = document.getElementById('pinboard');
+  const wrap = document.getElementById('board-wrap');
+  const ids = [...state.found];
+  if(ids.length===0){ board.innerHTML = `<div class="empty-note">Aún no habéis reunido pruebas. Id al Escenario, a los interrogatorios o a los Documentos.</div>`; board.style.height='auto'; document.getElementById('lines').innerHTML=''; return; }
+  // orden barajado (determinista) para que no queden en el mismo orden en que se encontraron
+  const order = ids.slice().sort((a,b)=> pinHash(a+'#') - pinHash(b+'#'));
+  const padding = 14;
+  const pinW = 156, pinH = 108, gapX = 18, gapY = 18;
+  const usableW = Math.max(wrap.clientWidth - padding*2, pinW);
+  const cols = Math.max(1, Math.floor((usableW + gapX) / (pinW + gapX)));
+  const rows = Math.ceil(order.length / cols);
+  board.style.height = (rows*(pinH+gapY) + padding*2) + 'px';
+  board.innerHTML = order.map((id, idx)=>{
+    const e = EVIDENCE[id]; const sel = state.selectedPin===id?'selected':'';
+    const col = idx % cols, row = Math.floor(idx/cols);
+    const h = pinHash(id);
+    const jitterX = (h % 11) - 5;
+    const jitterY = (Math.floor(h/11) % 11) - 5;
+    const rot = -9 + (h % 19);
+    const left = padding + col*(pinW+gapX) + jitterX;
+    const top = padding + row*(pinH+gapY) + jitterY;
+    return `<div class="pin ${sel}" style="--r:${rot}deg; left:${left}px; top:${top}px;" data-id="${id}" onclick="pinClick('${id}')"><b>${e.type==='real'?'Prueba':'Pista'}</b>${e.title}</div>`;
+  }).join('');
+  drawLines();
+  updateBoardProgress();
+}
+function pinClick(id){
+  if(state.selectedPin===null) state.selectedPin=id;
+  else if(state.selectedPin===id) state.selectedPin=null;
+  else{
+    const pair=[state.selectedPin,id].sort();
+    const exists = state.connections.some(c=>c[0]===pair[0]&&c[1]===pair[1]);
+    if(exists) state.connections = state.connections.filter(c=>!(c[0]===pair[0]&&c[1]===pair[1]));
+    else state.connections.push(pair);
+    state.selectedPin=null;
+  }
+  renderBoard();
+}
+function updateBoardProgress(){
+  const have = state.connections.map(c=>c.join(','));
+  const count = CORRECT_LINKS.filter(p=>have.includes(p.join(','))).length;
+  const el = document.getElementById('board-progress');
+  if(el) el.textContent = count;
+}
+function checkBoard(){
+  const have = state.connections.map(c=>c.join(','));
+  const missing = CORRECT_LINKS.filter(p=>!have.includes(p.join(',')));
+  const msg = document.getElementById('board-msg');
+  if(!msg) return;
+  if(missing.length===0){
+    state.boardSolved = true;
+    msg.innerHTML = '<span style="color:var(--gold);">El tablero cuadra: los movimientos de Franga por un lado, la secuencia de llamadas y el móvil por otro, las pruebas de la relación secreta por otro, y quienes ya lo sospechaban por otro. Y dos hilos que no llevan a ninguna parte — Alfonso y Edu quedan descartados.</span>';
+  } else {
+    msg.innerHTML = `<span style="color:#e8967f;">Todavía faltan conexiones por encontrar (no os digo cuáles). Llevan ${CORRECT_LINKS.length-missing.length}/${CORRECT_LINKS.length}.</span>`;
+  }
+}
+function drawLines(){
+  const svg=document.getElementById('lines'); const wrap=document.getElementById('board-wrap');
+  const wr=wrap.getBoundingClientRect(); svg.setAttribute('width',wr.width); svg.setAttribute('height',wr.height);
+  let html='';
+  state.connections.forEach(([a,b])=>{
+    const elA=document.querySelector(`.pin[data-id="${a}"]`), elB=document.querySelector(`.pin[data-id="${b}"]`);
+    if(!elA||!elB) return;
+    const ra=elA.getBoundingClientRect(), rb=elB.getBoundingClientRect();
+    const x1=ra.left-wr.left+ra.width/2, y1=ra.top-wr.top+ra.height/2, x2=rb.left-wr.left+rb.width/2, y2=rb.top-wr.top+rb.height/2;
+    html+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#a8492f" stroke-width="1.4" opacity="0.75"/>`;
+  });
+  svg.innerHTML = html;
+}
+window.addEventListener('resize', ()=>{ if(document.getElementById('panel-pruebas')?.classList.contains('active')) renderBoard(); });
+
+/* ---------------- TIMELINE ---------------- */
+function buildTimeline(){
+  document.getElementById('timeline').innerHTML = TIMELINE.map(it=>`<div class="tl-item"><div class="tl-time">${it.t}</div><div class="tl-text">${it.d}</div></div>`).join('');
+  renderContraCards();
+  renderOrderCards();
+}
+function renderContraCards(){
+  const el = document.getElementById('contra-cards');
+  if(!el) return;
+  if(!state.contraPicked) state.contraPicked = [];
+  el.innerHTML = CONTRA_CARDS.map((c,i)=>`
+    <button class="contra-card ${state.contraPicked.includes(i)?'picked':''}" onclick="pickContra(${i})"><b>${c.who}</b>${c.text}</button>
+  `).join('');
+}
+function pickContra(i){
+  const p = state.contraPicked;
+  if(p.includes(i)){ state.contraPicked = p.filter(x=>x!==i); }
+  else{ if(p.length>=2) p.shift(); p.push(i); }
+  renderContraCards();
+}
+function renderOrderCards(){
+  const el = document.getElementById('order-cards');
+  if(!el) return;
+  if(!state.orderList){
+    state.orderList = ['c','a','e','b','d']; // orden inicial mezclado fijo (no aleatorio, reproducible)
+  }
+  el.innerHTML = state.orderList.map((id,i)=>{
+    const ev = ORDER_EVENTS.find(e=>e.id===id);
+    return `<div style="display:flex; align-items:center; gap:10px; border:1px solid var(--line); background:var(--night-3); padding:10px 12px; margin-bottom:6px;">
+      <span style="font-family:'JetBrains Mono'; color:var(--gold); font-size:12px; min-width:16px;">${i+1}</span>
+      <span style="flex:1; color:var(--wall); font-size:13.5px;">${ev.text}</span>
+      <button class="btn small" style="padding:4px 8px;" onclick="moveOrder(${i},-1)" ${i===0?'disabled':''}>▲</button>
+      <button class="btn small" style="padding:4px 8px;" onclick="moveOrder(${i},1)" ${i===state.orderList.length-1?'disabled':''}>▼</button>
+    </div>`;
+  }).join('');
+}
+function moveOrder(i, dir){
+  const list = state.orderList;
+  const j = i+dir;
+  if(j<0 || j>=list.length) return;
+  [list[i],list[j]] = [list[j],list[i]];
+  renderOrderCards();
+}
+function checkOrder(){
+  const msg = document.getElementById('order-msg');
+  if(state.orderList.join(',') === ORDER_CORRECT.join(',')){
+    state.orderSolved = true;
+    msg.innerHTML = '<span style="color:var(--gold);">Ese es el orden real. Fijaos: el móvil se desbloquea antes de que se vaya la luz — mucho antes de que Pedrito diga haber entrado.</span>';
+  } else {
+    wrongAttempt('Ese orden no encaja del todo. Pensad qué tuvo que pasar primero para que lo siguiente fuera posible.');
+  }
+}
+function checkContradiction(){
+  const msg = document.getElementById('contra-msg');
+  const picked = [...(state.contraPicked||[])].sort();
+  const correct = [...CONTRA_PAIR].sort();
+  if(picked.length===2 && picked[0]===correct[0] && picked[1]===correct[1]){
+    state.contraSolved = true;
+    state.found.add('callzero');
+    updateFooter();
+    msg.innerHTML = '<span style="color:var(--gold);">Ahí está: dice que llamó a su hermana, pero esa llamada nunca llegó a conectarse. Franga no está diciendo la verdad — aunque puede que ni ella sepa por qué.</span>';
+  } else if(picked.length<2){
+    msg.textContent = 'Elegid exactamente dos frases.';
+  } else {
+    wrongAttempt('Esas dos pueden ser ciertas a la vez. No es esa pareja.');
+  }
+}
+
+/* ---------------- ACCUSATION ---------------- */
+function buildAccusation(){
+  document.getElementById('accuse-people').innerHTML = CHARACTERS.map(c=>`<label class="checkline"><input type="checkbox" value="${c.id}" class="acc-person"> ${c.name} — <i>${c.role}</i></label>`).join('');
+  renderAccuseEvidence();
+  refreshAccusationLock();
+}
+function renderAccuseEvidence(){
+  const ids=[...state.found];
+  document.getElementById('accuse-evidence').innerHTML = ids.length ? ids.map(id=>`<label class="checkline"><input type="checkbox" value="${id}" class="acc-evid"> ${EVIDENCE[id].title}</label>`).join('') : `<div class="empty-note" style="padding:10px;">Sin pruebas todavía.</div>`;
+}
+function refreshAccusationLock(){
+  const n = state.found.size;
+  const banner = document.getElementById('accuse-lock-banner');
+  const body = document.getElementById('accuse-body');
+  if(n < ACCUSE_MIN_EVIDENCE){
+    banner.innerHTML = `<div class="locked-banner">Necesitáis al menos ${ACCUSE_MIN_EVIDENCE} pruebas antes de acusar formalmente — llevéis ${n}/${ACCUSE_MIN_EVIDENCE}. Seguid investigando en Escenario, Personas y Documentos.</div>`;
+    body.style.opacity='0.35'; body.style.pointerEvents='none';
+  } else if(!state.alibiSolved){
+    banner.innerHTML = renderAlibiPuzzle();
+    body.style.opacity='0.35'; body.style.pointerEvents='none';
+  } else {
+    banner.innerHTML='';
+    body.style.opacity='1'; body.style.pointerEvents='auto';
+    renderAccuseEvidence();
+  }
+}
+function renderAlibiPuzzle(){
+  return `<div class="locked-banner" style="border-style:solid; border-color:var(--gold-soft); color:var(--wall);">
+    <b style="color:var(--gold); font-style:normal; display:block; margin-bottom:10px;">🧩 Antes de acusar: el cruce de coartadas</b>
+    <div style="font-size:13px; color:var(--ink-dim); margin-bottom:10px;">Edu, Alfonso y María Padilla estuvieron cada uno en un sitio <b>distinto</b> entre las 21:40 y las 22:00. Con estas cinco pistas, deducid dónde estaba cada uno:</div>
+    <ul style="font-size:12.5px; color:var(--ink-dim); padding-left:18px; margin:0 0 16px;">
+      ${ALIBI_CLUES.map(c=>`<li style="margin-bottom:4px;">${c}</li>`).join('')}
+    </ul>
+    ${ALIBI_PEOPLE.map(p=>`
+      <div class="alibi-row">
+        <div style="color:var(--wall);">${p.name}</div>
+        <select id="alibi-${p.id}"><option value="">— elige —</option>${ALIBI_OPTIONS.map(o=>`<option value="${o.id}">${o.label}</option>`).join('')}</select>
+      </div>
+    `).join('')}
+    <button class="btn small" onclick="checkAlibi()">Comprobar cruce</button>
+    <div class="alibi-msg" id="alibi-msg"></div>
+  </div>`;
+}
+function checkAlibi(){
+  const allFilled = ALIBI_PEOPLE.every(p=> document.getElementById('alibi-'+p.id).value);
+  const ok = ALIBI_PEOPLE.every(p=> document.getElementById('alibi-'+p.id).value === p.correct);
+  const msg = document.getElementById('alibi-msg');
+  if(ok){
+    state.alibiSolved = true;
+    msg.innerHTML = '<span style="color:var(--gold);">Cuadra. Los tres quedan fuera de toda duda razonable.</span>';
+    setTimeout(refreshAccusationLock, 900);
+  } else if(!allFilled){
+    msg.textContent = 'Completad los tres antes de comprobar.';
+  } else {
+    wrongAttempt('El cruce de coartadas no encaja — revisad de nuevo lo que os contó cada uno en sus interrogatorios.');
+  }
+}
+function resolveCase(){
+  const people=[...document.querySelectorAll('.acc-person:checked')].map(i=>i.value);
+  const evid=[...document.querySelectorAll('.acc-evid:checked')].map(i=>i.value);
+  const box=document.getElementById('resolution'); box.classList.add('show');
+  const hasFranga=people.includes('franga'), hasLourdes=people.includes('lourdes');
+  const evidFranga=evid.filter(e=>EVIDENCE[e].tag==='Franga').length;
+  const evidLourdes=evid.filter(e=>EVIDENCE[e].tag==='Lourdes').length;
+  if(hasFranga && hasLourdes && evidFranga>=2 && evidLourdes>=2){
+    setActBar(4);
+    document.getElementById('actbar').classList.add('show');
+    box.innerHTML=`<div class="story-img" id="epilogo-img" style="margin-bottom:16px;"></div><h3>Caso resuelto</h3>
+      <p>Franga admite haber golpeado a Andrino, ciega de rabia al encontrar en su móvil lo que llevaba semanas temiendo. Cuando Guille expone el contacto disfrazado y el prefijo que coincide con el de Lourdes, esta deja de fingir sorpresa. Reconoce que llegó al despacho minutos después, lo encontró ya sin vida, y que lo primero que hizo — antes de avisar a nadie — fue borrar su propia conversación de aquel móvil.</p>
+      <p>No hubo premeditación. Hubo una infidelidad, un secreto guardado durante meses por más gente de la que nadie sospechaba, y una noche en la que todo se cruzó a la vez. La Ermita de la Candelaria cerrará, al menos, un tiempo. Nadie brinda esta noche.</p>
+      <p class="mono" style="color:var(--gold);">— FIN DEL CASO —</p>`;
+    setImgOrFallback(document.getElementById('epilogo-img'), 'images/epilogo.jpg', true);
+  } else if(hasFranga && !hasLourdes){
+    box.innerHTML=`<h3>Resolución incompleta</h3><p>Habéis identificado a quien golpeó a Andrino. Pero alguien más estuvo en esa habitación después, y decidió borrar pruebas en lugar de dar la voz de alarma. Revisad el comentario de María y lo que esconde el móvil de Andrino.</p>`;
+    wrongAttempt('Acusación incompleta: os falta quien encubrió lo ocurrido.');
+  } else if(hasLourdes && !hasFranga){
+    box.innerHTML=`<h3>Resolución incompleta</h3><p>Habéis encontrado a quien encubrió la escena. Pero el golpe lo dio otra persona. Falta cerrar el círculo: ¿quién estuvo en el despacho entre las 21:40 y las 22:00?</p>`;
+    wrongAttempt('Acusación incompleta: os falta quien dio el golpe.');
+  } else if(evidFranga<2 || evidLourdes<2){
+    box.innerHTML=`<h3>Acusación insuficiente</h3><p>Tenéis una intuición, pero no pruebas suficientes para sostenerla. Cruzad lo que sabéis del despacho con lo que dice María y lo que descubre Jaime.</p>`;
+    wrongAttempt('No lleváis pruebas suficientes para sostener la acusación ante nadie.');
+  } else {
+    box.innerHTML=`<h3>Acusación equivocada</h3><p>El grupo os mira en silencio. Nada de lo que habéis reunido apunta realmente a esa persona — puede que una pista falsa os haya convencido.</p>`;
+    wrongAttempt('Acusación equivocada. El grupo os mira en silencio.');
+  }
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---------------- FOOTER ---------------- */
+/* ---------------- SHOT PENALTY SYSTEM ---------------- */
+function wrongAttempt(text){
+  state.shotCount = (state.shotCount||0)+1;
+  document.getElementById('shotcard-text').textContent = text;
+  document.getElementById('shotcard-count').textContent = state.shotCount===1 ? 'Primer chupito de la noche' : `Van ${state.shotCount} chupitos esta noche`;
+  document.getElementById('shotcard-overlay').classList.add('show');
+}
+function dismissShotCard(){
+  document.getElementById('shotcard-overlay').classList.remove('show');
+}
+function updateFooter(){
+  document.getElementById('foot-count').textContent = state.found.size;
+  if(document.getElementById('panel-acusacion')?.classList.contains('active')) refreshAccusationLock();
+}
+</script>
+</body>
+</html>
